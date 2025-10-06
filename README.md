@@ -87,13 +87,43 @@ npm run build
 npm start
 ```
 
-### Docker
+### Railway
+El proyecto está configurado para desplegarse automáticamente en Railway:
+
+1. **Variables de entorno requeridas** (Railway las autocompleta para PostgreSQL):
+   ```bash
+   NODE_ENV=production
+   PORT=5000
+   DATABASE_URL=${{Postgres.DATABASE_URL}}  # Railway lo autocompleta automáticamente
+   JWT_SECRET=tu_jwt_secret_muy_seguro_aqui_123456789
+   SESSION_SECRET=tu_session_secret_muy_seguro_aqui_987654321
+   FRONTEND_URL=https://tu-frontend-url.railway.app  # URL del frontend después de desplegarlo
+   BACKEND_URL=https://tu-backend-url.railway.app    # Railway lo asigna automáticamente
+   CORS_ORIGINS=https://tu-frontend-url.railway.app   # URL del frontend
+   ```
+
+2. **Railway detectará automáticamente**:
+   - `railway.json` con configuración de build y deploy
+   - `Dockerfile.prod` para multi-stage build optimizado
+   - `init.sh` para inicialización de base de datos
+   - Health check en `/health`
+
+3. **Proceso de despliegue**:
+   - Railway construye la imagen Docker
+   - Ejecuta `init.sh` que espera a que la DB esté lista y ejecuta migraciones
+   - Inicia la aplicación con `npm start`
+   - Verifica health check cada 30 segundos
+
+### Docker Local
 ```bash
 # Construir imagen
 docker build -f Dockerfile.prod -t ausbildung-backend .
 
 # Ejecutar contenedor
-docker run -p 5000:5000 ausbildung-backend
+docker run -p 5000:5000 \
+  -e DATABASE_URL="postgresql://user:pass@localhost:5432/db" \
+  -e JWT_SECRET="your-secret" \
+  ausbildung-backend
 ```
 
 ## 📚 API Documentation
