@@ -42,6 +42,17 @@ import http from 'http';
 import websocketController from './src/controllers/websocketController.js';
 import os from 'os';
 
+// Función para verificar conexión a la base de datos
+async function checkDatabaseConnection() {
+    try {
+        await sequelize.authenticate();
+        return 'OK';
+    } catch (error) {
+        console.error('Database connection check failed:', error.message);
+        return 'ERROR';
+    }
+}
+
 // Función para obtener la IP local
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
@@ -87,10 +98,8 @@ app.use(cors({
 const port = process.env.PORT || 5001;
 console.log(`🔧 Puerto configurado: ${port}`);
 
-const options = {
-  key: fs.readFileSync('./server.key'),
-  cert: fs.readFileSync('./server.cert')
-};
+// En Railway, SSL es manejado automáticamente por la plataforma
+// No necesitamos configurar HTTPS manualmente
 
 // Iniciando relaciones de DB
 // 🔥 TEMPORALMENTE DESACTIVADO: Remover {force: true} para no dropear tablas en cada inicio
@@ -173,21 +182,42 @@ app.get('/', (req, res) => {
 });
 
 // 🏥 HEALTH CHECK ENDPOINT
-app.get('/health', (req, res) => {
-    const healthCheck = {
-        timestamp: new Date().toISOString(),
-        status: 'OK',
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
-        version: process.env.npm_package_version || '1.0.0',
-        checks: {
-            database: 'OK', // TODO: Verificar conexión a BD
-            cache: 'OK',     // TODO: Verificar Redis si se usa
-            websocket: 'OK'  // TODO: Verificar WebSocket
-        }
-    };
-    
-    res.status(200).json(healthCheck);
+app.get('/health', async (req, res) => {
+    try {
+        // Verificar conexión a la base de datos
+        const dbStatus = await checkDatabaseConnection();
+
+        const healthCheck = {
+            timestamp: new Date().toISOString(),
+            status: dbStatus === 'OK' ? 'OK' : 'ERROR',
+            uptime: process.uptime(),
+            environment: process.env.NODE_ENV || 'development',
+            version: process.env.npm_package_version || '1.0.0',
+            checks: {
+                database: dbStatus,
+                cache: 'OK',     // TODO: Verificar Redis si se usa
+                websocket: 'OK'  // TODO: Verificar WebSocket
+            }
+        };
+
+        const statusCode = dbStatus === 'OK' ? 200 : 503;
+        res.status(statusCode).json(healthCheck);
+    } catch (error) {
+        console.error('Health check error:', error);
+        res.status(503).json({
+            timestamp: new Date().toISOString(),
+            status: 'ERROR',
+            uptime: process.uptime(),
+            environment: process.env.NODE_ENV || 'development',
+            version: process.env.npm_package_version || '1.0.0',
+            checks: {
+                database: 'ERROR',
+                cache: 'OK',
+                websocket: 'OK'
+            },
+            error: error.message
+        });
+    }
 });
 
 app.get('/privacy', (req, res) => { 
