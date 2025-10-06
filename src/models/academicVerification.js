@@ -34,8 +34,7 @@ export const AcademicVerification = sequelize.define('academic_verifications', {
     status: {
         type: DataTypes.ENUM('pending', 'approved', 'rejected'),
         allowNull: false,
-        defaultValue: 'pending',
-        comment: 'Estado de la verificación: pending, approved, rejected'
+        defaultValue: 'pending'
     },
     // Comentarios del centro de estudios
     comments: {

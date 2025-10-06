@@ -55,8 +55,7 @@ export const Cv = sequelize.define('cvs', {
     academicVerificationStatus: {
         type: DataTypes.ENUM('unverified', 'pending', 'verified', 'rejected'),
         allowNull: false,
-        defaultValue: 'unverified',
-        comment: 'Estado de verificación de la información académica: unverified, pending, verified, rejected'
+        defaultValue: 'unverified'
     },
 
     academicVerifiedAt: {
