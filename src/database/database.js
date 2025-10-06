@@ -75,4 +75,11 @@ const sequelize = new Sequelize(sequelizeConfig.database, sequelizeConfig.userna
     dialectOptions: sequelizeConfig.dialectOptions
 });
 
+// Sincronizar automáticamente las tablas en producción (Railway)
+if (process.env.NODE_ENV === 'production' || process.env.DATABASE_URL) {
+    console.log('🔄 Sincronizando tablas automáticamente...');
+    await sequelize.sync({ alter: true });
+    console.log('✅ Tablas sincronizadas correctamente');
+}
+
 export default sequelize;
