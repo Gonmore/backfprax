@@ -1,4 +1,4 @@
-// app.js 
+// app.js
 import 'dotenv/config'
 import sequelize from './src/database/database.js'
 import './src/models/relations.js'
@@ -64,6 +64,18 @@ function getLocalIP() {
     }
   }
   return 'localhost';
+}
+
+// 🚀 INICIALIZACIÓN DE LA BASE DE DATOS (SYNC)
+async function initializeDatabase() {
+    try {
+        console.log('🔄 Sincronizando tablas automáticamente (force: true para deploy inicial)...');
+        await sequelize.sync({ force: true });
+        console.log('✅ Tablas creadas correctamente desde cero');
+    } catch (error) {
+        console.error('❌ Error al sincronizar base de datos:', error);
+        throw error;
+    }
 }
 
 
@@ -252,19 +264,34 @@ app.use((error, req, res, next) => {
 // Servidor escuchando en el puerto
 const server = http.createServer(app);
 
-// Inicializar WebSocket controller
-websocketController.initialize(server);
+// Inicializar base de datos y luego iniciar servidor
+async function startServer() {
+    try {
+        // 🚀 PRIMERO: Sincronizar base de datos
+        await initializeDatabase();
 
-// Iniciar heartbeat para mantener conexiones WebSocket vivas
-websocketController.startHeartbeat();
+        // 🔌 SEGUNDO: Inicializar WebSocket controller
+        websocketController.initialize(server);
 
-server.listen(port, '0.0.0.0', () => {
-  const localIP = getLocalIP();
-  console.log(`🚀 Aplicación escuchando en:`);
-  console.log(`   📍 Local: http://localhost:${port}`);
-  console.log(`   🌐 Red:   http://0.0.0.0:${port}`);
-  console.log(`   🏠 IP:    http://${localIP}:${port}`);
-  console.log(`🔌 WebSocket server inicializado`);
-  logger.info(`Server started on port: ${port} with WebSocket support - Accessible from network at ${localIP}:${port}`);
-  swaggerDocs(app, port)
-});
+        // 💓 TERCERO: Iniciar heartbeat para mantener conexiones WebSocket vivas
+        websocketController.startHeartbeat();
+
+        // 🌐 CUARTO: Iniciar servidor
+        server.listen(port, '0.0.0.0', () => {
+            const localIP = getLocalIP();
+            console.log(`🚀 Aplicación escuchando en:`);
+            console.log(`   📍 Local: http://localhost:${port}`);
+            console.log(`   🌐 Red:   http://0.0.0.0:${port}`);
+            console.log(`   🏠 IP:    http://${localIP}:${port}`);
+            console.log(`🔌 WebSocket server inicializado`);
+            logger.info(`Server started on port: ${port} with WebSocket support - Accessible from network at ${localIP}:${port}`);
+            swaggerDocs(app, port);
+        });
+    } catch (error) {
+        console.error('❌ Error al iniciar la aplicación:', error);
+        process.exit(1);
+    }
+}
+
+// Iniciar la aplicación
+startServer();
