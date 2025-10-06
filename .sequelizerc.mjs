@@ -8,6 +8,5 @@ export default {
   'config': path.resolve(__dirname, 'config', 'database-cli.js'),
   'models-path': path.resolve(__dirname, 'src', 'models'),
   'seeders-path': path.resolve(__dirname, 'seeders'),
-  'migrations-path': path.resolve(__dirname, 'migrations'),
-  'migration-file-extension': '.cjs'
+  'migrations-path': path.resolve(__dirname, 'migrations')
 };
