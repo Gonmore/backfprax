@@ -1,4 +1,4 @@
-require('dotenv').config();
+import 'dotenv/config';
 
 // Función para parsear DATABASE_URL de Railway
 function parseDatabaseUrl(databaseUrl) {
@@ -65,4 +65,4 @@ if (process.env.DATABASE_URL) {
     };
 }
 
-module.exports = config;
+export default config;
