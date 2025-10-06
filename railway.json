@@ -1,7 +1,6 @@
 {
   "build": {
-    "builder": "dockerfile",
-    "dockerfilePath": "Dockerfile.prod"
+    "builder": "NIXPACKS"
   },
   "deploy": {
     "startCommand": "chmod +x init.sh && ./init.sh && npm start",
