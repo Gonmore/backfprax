@@ -27,8 +27,7 @@ export const OfferSkill = sequelize.define('offer_skills', {
     requiredLevel: {
         type: DataTypes.ENUM('beginner', 'intermediate', 'advanced', 'expert'),
         allowNull: false,
-        defaultValue: 'beginner',
-        comment: 'Nivel mínimo requerido para esta skill'
+        defaultValue: 'beginner'
     },
     isMandatory: {
         type: DataTypes.BOOLEAN,
