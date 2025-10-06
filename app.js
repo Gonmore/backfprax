@@ -72,6 +72,20 @@ async function initializeDatabase() {
         console.log('🔄 Sincronizando tablas automáticamente (alter: true para compatibilidad)...');
         await sequelize.sync({ alter: true });
         console.log('✅ Tablas sincronizadas correctamente');
+
+        // 🚀 EJECUTAR SEED AUTOMÁTICO EN PRODUCCIÓN (Railway)
+        if (process.env.NODE_ENV === 'production' && process.env.RAILWAY_ENVIRONMENT) {
+            console.log('🌱 Ejecutando seed automático en Railway...');
+            try {
+                const seedDatabase = (await import('./src/database/seed.js')).default;
+                const seedResult = await seedDatabase();
+                console.log('✅ Seed completado automáticamente:', seedResult.data);
+            } catch (seedError) {
+                console.error('❌ Error en seed automático:', seedError.message);
+                // No fallar la aplicación por error en seed, solo loggear
+            }
+        }
+
     } catch (error) {
         console.error('❌ Error al sincronizar base de datos:', error);
         throw error;

@@ -7,7 +7,7 @@ import { comparar } from '../common/bcrypt.js';
 class AuthController {
     async register(req, res) {
         try {
-            const { username, email, password, role, name, surname, phone, description, countryCode, cityId, address, studentData, scenterId } = req.body;
+            const { username, email, password, role, name, surname, phone, description, countryCode, cityId, address, studentData, scenterId, scenterData } = req.body;
 
             // Validaciones básicas
             if (!username || !email || !password || !role) {
@@ -36,21 +36,17 @@ class AuthController {
             }
 
             // Validar scenterId si el role es scenter
-            if (role === 'scenter' && !scenterId) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Para usuarios de centro educativo, se requiere seleccionar un centro educativo (scenterId)'
-                });
-            }
-
-            // Verificar que el scenter existe si se proporciona
-            if (role === 'scenter' && scenterId) {
-                const scenter = await Scenter.findByPk(scenterId);
-                if (!scenter) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'El centro educativo seleccionado no existe'
-                    });
+            if (role === 'scenter') {
+                // Si no se proporciona scenterId, se creará un nuevo centro educativo
+                // Si se proporciona, se validará que exista
+                if (scenterId) {
+                    const scenter = await Scenter.findByPk(scenterId);
+                    if (!scenter) {
+                        return res.status(400).json({
+                            success: false,
+                            message: 'El centro educativo seleccionado no existe'
+                        });
+                    }
                 }
             }
 
@@ -117,6 +113,56 @@ class AuthController {
                 }
             }
 
+            // Crear centro educativo si es necesario
+            let scenter = null;
+            let userScenter = null;
+            if (role === 'scenter') {
+                try {
+                    if (scenterId) {
+                        // Usar centro existente
+                        scenter = await Scenter.findByPk(scenterId);
+                        if (!scenter) {
+                            await User.destroy({ where: { id: user.id } });
+                            return res.status(400).json({
+                                success: false,
+                                message: 'El centro educativo seleccionado no existe'
+                            });
+                        }
+                    } else if (scenterData) {
+                        // Crear nuevo centro educativo
+                        scenter = await Scenter.create({
+                            name: scenterData.name,
+                            code: scenterData.code,
+                            city: scenterData.city,
+                            address: scenterData.address,
+                            phone: scenterData.phone,
+                            email: scenterData.email,
+                            codigo_postal: scenterData.codigo_postal,
+                            active: true
+                        });
+                    } else {
+                        // Si no se proporciona ni scenterId ni scenterData, error
+                        await User.destroy({ where: { id: user.id } });
+                        return res.status(400).json({
+                            success: false,
+                            message: 'Para usuarios de centro educativo, debe proporcionar scenterId (centro existente) o scenterData (crear nuevo centro)'
+                        });
+                    }
+
+                    // Crear la relación usuario-centro
+                    userScenter = await UserScenter.create({
+                        userId: user.id,
+                        scenterId: scenter.id,
+                        isActive: true
+                    });
+
+                } catch (scenterError) {
+                    // Si falla la creación del centro o la relación, eliminar el usuario creado
+                    await User.destroy({ where: { id: user.id } });
+                    throw new Error('Error creando centro educativo: ' + scenterError.message);
+                }
+            }
+
             // Generar token
             const token = jwt.sign({
                 userId: user.id,
@@ -141,7 +187,14 @@ class AuthController {
                     cityId: user.cityId,
                     address: user.address,
                     needsOnboarding: true,
-                    studentId: student?.id
+                    studentId: student?.id,
+                    scenterId: scenter?.id,
+                    scenter: scenter ? {
+                        id: scenter.id,
+                        name: scenter.name,
+                        code: scenter.code,
+                        city: scenter.city
+                    } : null
                 }
             });
 

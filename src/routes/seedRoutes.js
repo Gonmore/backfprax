@@ -25,6 +25,33 @@ router.post('/seed', async (req, res) => {
     }
 });
 
+// Endpoint para ejecutar seed FORZADO (borra y recrea todo)
+router.post('/seed-force', async (req, res) => {
+    try {
+        logger.warn('💥 Ejecutando seed FORZADO - Esto borrará todos los datos existentes!');
+        
+        // Forzar sync que borra todas las tablas
+        await sequelize.sync({ force: true });
+        logger.info('🗑️ Todas las tablas borradas');
+        
+        // Ejecutar seed completo
+        const result = await seedDatabase();
+        
+        res.status(200).json({
+            message: 'Seed FORZADO ejecutado exitosamente - Todos los datos fueron recreados',
+            warning: 'Todos los datos anteriores fueron eliminados',
+            data: result.data
+        });
+        
+    } catch (error) {
+        logger.error('Error ejecutando seed forzado:', error);
+        res.status(500).json({
+            message: 'Error ejecutando seed forzado',
+            error: error.message
+        });
+    }
+});
+
 // Endpoint para verificar el estado de los datos
 router.get('/status', async (req, res) => {
     try {
