@@ -69,11 +69,11 @@ function getLocalIP() {
 // 🚀 INICIALIZACIÓN DE LA BASE DE DATOS (SYNC)
 async function initializeDatabase() {
     try {
-        console.log('🔄 Sincronizando tablas automáticamente (alter: true para compatibilidad)...');
-        await sequelize.sync({ alter: true });
-        console.log('✅ Tablas sincronizadas correctamente');
+        console.log('🔄 Recreando tablas completamente (force: true)...');
+        await sequelize.sync({ force: true });
+        console.log('✅ Tablas recreadas correctamente');
     } catch (error) {
-        console.error('❌ Error al sincronizar base de datos:', error);
+        console.error('❌ Error al recrear base de datos:', error);
         throw error;
     }
 }
