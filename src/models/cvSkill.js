@@ -27,8 +27,7 @@ export const CvSkill = sequelize.define('cv_skills', {
     proficiencyLevel: {
         type: DataTypes.ENUM('bajo', 'medio', 'alto'),
         allowNull: false,
-        defaultValue: 'medio',
-        comment: 'Nivel de conocimiento: bajo, medio, alto'
+        defaultValue: 'medio'
     },
     yearsOfExperience: {
         type: DataTypes.DECIMAL(3, 1), // Permite valores como 1.5 años
