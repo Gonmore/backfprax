@@ -19,6 +19,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# Pero permitir archivos de configuración de logs en src/
+!src/logs/
+
 # Runtime data
 pids/
 *.pid

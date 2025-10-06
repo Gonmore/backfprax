@@ -10233,3 +10233,4 @@
 [6/10/2025, 15:58:15] GET /api/students/tokens/balance 304 - - 66.866 ms - Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36 Edg/140.0.0.0
 [6/10/2025, 15:59:15] GET /api/students/tokens/balance 304 - - 65.204 ms - Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36 Edg/140.0.0.0
 [6/10/2025, 16:00:15] GET /api/students/tokens/balance 304 - - 59.606 ms - Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36 Edg/140.0.0.0
+[6/10/2025, 16:01:15] GET /api/students/tokens/balance 304 - - 62.099 ms - Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36 Edg/140.0.0.0

@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx sequelize-cli db:migrate --config src/database/database.js || echo 'Migrations may have failed, continuing...' && node app.js",
+    "start": "npx sequelize-cli db:migrate --config config/database-cli.js || echo 'Migrations may have failed, continuing...' && node app.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
