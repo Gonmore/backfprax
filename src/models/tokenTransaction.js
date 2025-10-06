@@ -26,13 +26,11 @@ export const TokenTransaction = sequelize.define('token_transactions', {
     },
     type: {
         type: DataTypes.ENUM('purchase', 'usage', 'refund'),
-        allowNull: false,
-        comment: 'Tipo de transacción: compra, uso o reembolso'
+        allowNull: false
     },
     action: {
         type: DataTypes.ENUM('view_cv', 'contact_student', 'buy_tokens'),
-        allowNull: true,
-        comment: 'Acción específica que consumió tokens'
+        allowNull: true
     },
     amount: {
         type: DataTypes.INTEGER,
