@@ -1,0 +1,3446 @@
+{
+  "timestamp": "2025-09-29T16:35:35.442Z",
+  "tables": {
+    "knowledge_areas": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(knowledge_areas_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "focus": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "4",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "Ciencias Físico-Matemáticas y las Ingenierías",
+          "description": "Estudio de las ciencias exactas y su aplicación tecnológica",
+          "focus": "Estudio de las ciencias exactas (Matemáticas, Física, Astronomía, Ciencias de la Computación) y su aplicación práctica para el desarrollo tecnológico, la construcción y la industria.",
+          "createdAt": "2025-09-24T14:05:39.922Z",
+          "updatedAt": "2025-09-24T14:05:39.922Z"
+        },
+        {
+          "id": 2,
+          "name": "Ciencias Biológicas, Químicas y de la Salud",
+          "description": "Estudio de los seres vivos, la salud y procesos químicos",
+          "focus": "Estudio de los seres vivos, la vida, la salud humana y animal, los procesos químicos y biológicos.",
+          "createdAt": "2025-09-24T14:05:39.986Z",
+          "updatedAt": "2025-09-24T14:05:39.986Z"
+        },
+        {
+          "id": 3,
+          "name": "Ciencias Sociales y Administrativas",
+          "description": "Estudio de grupos humanos, relaciones sociales y gestión",
+          "focus": "Estudio de los grupos humanos, las relaciones sociales, la economía, la política y la gestión de organizaciones.",
+          "createdAt": "2025-09-24T14:05:40.034Z",
+          "updatedAt": "2025-09-24T14:05:40.034Z"
+        },
+        {
+          "id": 4,
+          "name": "Humanidades y Artes",
+          "description": "Estudio del pensamiento humano, cultura y expresión artística",
+          "focus": "Estudio del pensamiento humano, la historia, la cultura, el lenguaje, la estética, las manifestaciones artísticas y el acervo cultural.",
+          "createdAt": "2025-09-24T14:05:40.084Z",
+          "updatedAt": "2025-09-24T14:05:40.084Z"
+        }
+      ]
+    },
+    "profamilys": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(profamilys_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "knowledgeAreaId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "74",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "Ingeniería Civil",
+          "description": "Familia profesional: Ingeniería Civil",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.940Z",
+          "updatedAt": "2025-09-24T14:05:39.940Z"
+        },
+        {
+          "id": 2,
+          "name": "Ingeniería Mecánica",
+          "description": "Familia profesional: Ingeniería Mecánica",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.946Z",
+          "updatedAt": "2025-09-24T14:05:39.946Z"
+        },
+        {
+          "id": 3,
+          "name": "Ingeniería Eléctrica",
+          "description": "Familia profesional: Ingeniería Eléctrica",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.950Z",
+          "updatedAt": "2025-09-24T14:05:39.950Z"
+        },
+        {
+          "id": 4,
+          "name": "Ingeniería Electrónica",
+          "description": "Familia profesional: Ingeniería Electrónica",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.953Z",
+          "updatedAt": "2025-09-24T14:05:39.953Z"
+        },
+        {
+          "id": 5,
+          "name": "Ingeniería Industrial",
+          "description": "Familia profesional: Ingeniería Industrial",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.956Z",
+          "updatedAt": "2025-09-24T14:05:39.956Z"
+        },
+        {
+          "id": 6,
+          "name": "Ingeniería en Sistemas",
+          "description": "Familia profesional: Ingeniería en Sistemas",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.959Z",
+          "updatedAt": "2025-09-24T14:05:39.959Z"
+        },
+        {
+          "id": 7,
+          "name": "Ingeniería Aeronáutica",
+          "description": "Familia profesional: Ingeniería Aeronáutica",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.963Z",
+          "updatedAt": "2025-09-24T14:05:39.963Z"
+        },
+        {
+          "id": 8,
+          "name": "Ingeniería Química",
+          "description": "Familia profesional: Ingeniería Química",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.967Z",
+          "updatedAt": "2025-09-24T14:05:39.967Z"
+        },
+        {
+          "id": 9,
+          "name": "Matemáticas",
+          "description": "Familia profesional: Matemáticas",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.970Z",
+          "updatedAt": "2025-09-24T14:05:39.970Z"
+        },
+        {
+          "id": 10,
+          "name": "Física",
+          "description": "Familia profesional: Física",
+          "knowledgeAreaId": 1,
+          "createdAt": "2025-09-24T14:05:39.973Z",
+          "updatedAt": "2025-09-24T14:05:39.973Z"
+        }
+      ]
+    },
+    "users": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(users_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "username": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "email": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "password": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "role": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": "student",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "surname": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "phone": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "active": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "googleId": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "facebookId": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "image": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "status": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": "active",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "countryCode": {
+          "type": "CHARACTER VARYING(2)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Código ISO del país (ej: BO, AR, BR)",
+          "special": [],
+          "primaryKey": false
+        },
+        "cityId": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "ID de la ciudad de GeoNames",
+          "special": [],
+          "primaryKey": false
+        },
+        "address": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Dirección completa del usuario",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "12",
+      "sampleData": [
+        {
+          "id": 1,
+          "username": "techsolutions_rrhh",
+          "email": "rrhh@techsolutions.es",
+          "password": "$2b$10$7N2pmeMMW8AY3OUVs/CxDuLoGAMqfA9vgGeeHh5TARXliFCoFfvam",
+          "role": "company",
+          "name": null,
+          "surname": null,
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:40.855Z",
+          "updatedAt": "2025-09-24T14:05:40.855Z"
+        },
+        {
+          "id": 2,
+          "username": "constructora_talento",
+          "email": "talento@constructora-moderna.com",
+          "password": "$2b$10$swRsXiyVVDRz9P2DXFuozulyY3pi19xD1mEdpiygn55/DQ.WFRi9G",
+          "role": "company",
+          "name": null,
+          "surname": null,
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:40.920Z",
+          "updatedAt": "2025-09-24T14:05:40.920Z"
+        },
+        {
+          "id": 3,
+          "username": "saludplus_recursos",
+          "email": "recursos@saludplus.es",
+          "password": "$2b$10$ofnsKgFgSg4ITykUnjZjie7i/w2XOBj2TqIzrQi.5j2q6W/2YGzN.",
+          "role": "company",
+          "name": null,
+          "surname": null,
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:40.975Z",
+          "updatedAt": "2025-09-24T14:05:40.975Z"
+        },
+        {
+          "id": 4,
+          "username": "bancoinnovador_empleo",
+          "email": "empleo@bancoinnovador.es",
+          "password": "$2b$10$4uouOnOZUsTgDLpVVGz7geZe4bpF5imhPtYKc9afKViLLotp/lv9K",
+          "role": "company",
+          "name": null,
+          "surname": null,
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.035Z",
+          "updatedAt": "2025-09-24T14:05:41.035Z"
+        },
+        {
+          "id": 5,
+          "username": "escuela_futuro",
+          "email": "direccion@escuela-futuro.edu",
+          "password": "$2b$10$j0L5J8nx7j7bTfaSyTMTAOkwBrsuNEuMP72csl2ozmQCIAVYVnuNe",
+          "role": "company",
+          "name": null,
+          "surname": null,
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.090Z",
+          "updatedAt": "2025-09-24T14:05:41.090Z"
+        },
+        {
+          "id": 6,
+          "username": "maria_garcia",
+          "email": "maria.garcia@email.com",
+          "password": "$2b$10$eDngyvoUgKEQh275O.qjluxWMboexbbxNJ6atxFo/d4bwEih/vfQC",
+          "role": "student",
+          "name": "María",
+          "surname": "García López",
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.145Z",
+          "updatedAt": "2025-09-24T14:05:41.145Z"
+        },
+        {
+          "id": 7,
+          "username": "carlos_rodriguez",
+          "email": "carlos.rodriguez@email.com",
+          "password": "$2b$10$BHXiYKuCjgJqw9jrW5wFBOSY9ZDasd2EFwjduYWkk0/TsuuXvNRDO",
+          "role": "student",
+          "name": "Carlos",
+          "surname": "Rodríguez Martín",
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.204Z",
+          "updatedAt": "2025-09-24T14:05:41.204Z"
+        },
+        {
+          "id": 8,
+          "username": "ana_martinez",
+          "email": "ana.martinez@email.com",
+          "password": "$2b$10$cmdM0fdAaPPXljQGuO7QUO3028Ok98OiPNwLAVGyfSctMKlnV4qiS",
+          "role": "student",
+          "name": "Ana",
+          "surname": "Martínez Sánchez",
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.260Z",
+          "updatedAt": "2025-09-24T14:05:41.260Z"
+        },
+        {
+          "id": 9,
+          "username": "david_lopez",
+          "email": "david.lopez@email.com",
+          "password": "$2b$10$L5LUC.Oi.1iTmfVDaeoT0.5k0zAEKLpsmbtZOkS4xRfOleQz6Wqsq",
+          "role": "student",
+          "name": "David",
+          "surname": "López Fernández",
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.320Z",
+          "updatedAt": "2025-09-24T14:05:41.320Z"
+        },
+        {
+          "id": 10,
+          "username": "laura_gonzalez",
+          "email": "laura.gonzalez@email.com",
+          "password": "$2b$10$SUm12FOTwpV4wgrfALDHEuKJiPt6Y57qfiTvYvlum/nS..MMCLJEu",
+          "role": "student",
+          "name": "Laura",
+          "surname": "González Ruiz",
+          "phone": null,
+          "description": null,
+          "active": true,
+          "googleId": null,
+          "facebookId": null,
+          "image": null,
+          "status": "active",
+          "countryCode": null,
+          "cityId": null,
+          "address": null,
+          "createdAt": "2025-09-24T14:05:41.375Z",
+          "updatedAt": "2025-09-24T14:05:41.375Z"
+        }
+      ]
+    },
+    "student_skills": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(student_skills_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "skillId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "proficiencyLevel": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "beginner",
+          "comment": null,
+          "special": [
+            "beginner",
+            "intermediate",
+            "advanced",
+            "expert"
+          ],
+          "primaryKey": false
+        },
+        "yearsOfExperience": {
+          "type": "NUMERIC",
+          "allowNull": true,
+          "defaultValue": "0",
+          "comment": "Años de experiencia en esta habilidad",
+          "special": [],
+          "primaryKey": false
+        },
+        "isVerified": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": "Si la habilidad ha sido verificada por el centro educativo",
+          "special": [],
+          "primaryKey": false
+        },
+        "certificationUrl": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "URL a certificación o evidencia de la habilidad",
+          "special": [],
+          "primaryKey": false
+        },
+        "notes": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Notas adicionales sobre la experiencia en esta habilidad",
+          "special": [],
+          "primaryKey": false
+        },
+        "addedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Fecha cuando se agregó la habilidad",
+          "special": [],
+          "primaryKey": false
+        },
+        "lastUpdated": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Última actualización de la habilidad",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "3",
+      "sampleData": [
+        {
+          "id": 1,
+          "studentId": 6,
+          "skillId": 3,
+          "proficiencyLevel": "beginner",
+          "yearsOfExperience": "0.0",
+          "isVerified": false,
+          "certificationUrl": null,
+          "notes": "",
+          "addedAt": "2025-09-25T15:16:47.025Z",
+          "lastUpdated": "2025-09-25T15:16:47.025Z",
+          "createdAt": "2025-09-25T15:16:47.026Z",
+          "updatedAt": "2025-09-25T15:16:47.026Z"
+        },
+        {
+          "id": 2,
+          "studentId": 6,
+          "skillId": 6,
+          "proficiencyLevel": "beginner",
+          "yearsOfExperience": "0.0",
+          "isVerified": false,
+          "certificationUrl": null,
+          "notes": "",
+          "addedAt": "2025-09-25T16:05:26.181Z",
+          "lastUpdated": "2025-09-25T16:05:26.181Z",
+          "createdAt": "2025-09-25T16:05:26.183Z",
+          "updatedAt": "2025-09-25T16:05:26.183Z"
+        },
+        {
+          "id": 3,
+          "studentId": 6,
+          "skillId": 10,
+          "proficiencyLevel": "beginner",
+          "yearsOfExperience": "0.0",
+          "isVerified": false,
+          "certificationUrl": null,
+          "notes": "",
+          "addedAt": "2025-09-25T16:14:33.503Z",
+          "lastUpdated": "2025-09-25T16:14:33.503Z",
+          "createdAt": "2025-09-25T16:14:33.503Z",
+          "updatedAt": "2025-09-25T16:14:33.503Z"
+        }
+      ]
+    },
+    "skills": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(skills_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "area": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "129",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "Comunicación",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.136Z",
+          "updatedAt": "2025-09-24T14:05:40.136Z"
+        },
+        {
+          "id": 2,
+          "name": "Trabajo en equipo",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.139Z",
+          "updatedAt": "2025-09-24T14:05:40.139Z"
+        },
+        {
+          "id": 3,
+          "name": "Inglés",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.141Z",
+          "updatedAt": "2025-09-24T14:05:40.141Z"
+        },
+        {
+          "id": 4,
+          "name": "Francés",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.144Z",
+          "updatedAt": "2025-09-24T14:05:40.144Z"
+        },
+        {
+          "id": 5,
+          "name": "Alemán",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.146Z",
+          "updatedAt": "2025-09-24T14:05:40.146Z"
+        },
+        {
+          "id": 6,
+          "name": "Ofimática",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.150Z",
+          "updatedAt": "2025-09-24T14:05:40.150Z"
+        },
+        {
+          "id": 7,
+          "name": "Resolución de problemas",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.153Z",
+          "updatedAt": "2025-09-24T14:05:40.153Z"
+        },
+        {
+          "id": 8,
+          "name": "Adaptabilidad",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.155Z",
+          "updatedAt": "2025-09-24T14:05:40.155Z"
+        },
+        {
+          "id": 9,
+          "name": "Gestión del tiempo",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.158Z",
+          "updatedAt": "2025-09-24T14:05:40.158Z"
+        },
+        {
+          "id": 10,
+          "name": "Liderazgo",
+          "area": null,
+          "createdAt": "2025-09-24T14:05:40.160Z",
+          "updatedAt": "2025-09-24T14:05:40.160Z"
+        }
+      ]
+    },
+    "students": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(students_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "grade": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "course": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "double": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "car": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "active": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tag": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "photo": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "disp": {
+          "type": "DATE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "userId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "scenterId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "7",
+      "sampleData": [
+        {
+          "id": 2,
+          "grade": "3º ESO",
+          "course": "Tecnología",
+          "double": false,
+          "car": false,
+          "active": true,
+          "tag": null,
+          "description": "Apasionado por la tecnología y la programación. Me gustaría estudiar Ingeniería Informática.",
+          "photo": null,
+          "disp": null,
+          "userId": 7,
+          "createdAt": "2025-09-24T14:05:41.257Z",
+          "updatedAt": "2025-09-24T14:05:41.257Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 4,
+          "grade": "1º ESO",
+          "course": "General",
+          "double": false,
+          "car": null,
+          "active": true,
+          "tag": null,
+          "description": null,
+          "photo": null,
+          "disp": null,
+          "userId": 9,
+          "createdAt": "2025-09-24T14:05:41.373Z",
+          "updatedAt": "2025-09-24T14:05:41.373Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 5,
+          "grade": null,
+          "course": null,
+          "double": false,
+          "car": null,
+          "active": true,
+          "tag": null,
+          "description": null,
+          "photo": null,
+          "disp": null,
+          "userId": 10,
+          "createdAt": "2025-09-24T14:05:41.433Z",
+          "updatedAt": "2025-09-24T14:05:41.433Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 6,
+          "grade": "2º CFGS Desarrollo de Aplicaciones Web",
+          "course": "Informática",
+          "double": false,
+          "car": true,
+          "active": true,
+          "tag": null,
+          "description": "Estudiante de FP Superior en Desarrollo de Aplicaciones Web. Tengo conocimientos en JavaScript, React y Node.js.",
+          "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+          "disp": null,
+          "userId": 11,
+          "createdAt": "2025-09-24T14:05:41.493Z",
+          "updatedAt": "2025-09-24T14:05:41.493Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 7,
+          "grade": "3º ESO",
+          "course": "Idiomas",
+          "double": false,
+          "car": false,
+          "active": true,
+          "tag": null,
+          "description": "Estudiante bilingüe español-alemán interesada en Relaciones Internacionales.",
+          "photo": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+          "disp": null,
+          "userId": 12,
+          "createdAt": "2025-09-24T14:05:41.549Z",
+          "updatedAt": "2025-09-24T14:05:41.549Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 3,
+          "grade": "2º Bachillerato",
+          "course": "Humanidades",
+          "double": false,
+          "car": true,
+          "active": true,
+          "tag": null,
+          "description": "",
+          "photo": "",
+          "disp": null,
+          "userId": 8,
+          "createdAt": "2025-09-24T14:05:41.317Z",
+          "updatedAt": "2025-09-24T17:13:16.931Z",
+          "profamilyId": null,
+          "scenterId": null
+        },
+        {
+          "id": 1,
+          "grade": "4º ESO",
+          "course": "Ciencias",
+          "double": false,
+          "car": true,
+          "active": true,
+          "tag": null,
+          "description": "Estudiante motivada interesada en carreras científicas, especialmente medicina.",
+          "photo": "",
+          "disp": null,
+          "userId": 6,
+          "createdAt": "2025-09-24T14:05:41.201Z",
+          "updatedAt": "2025-09-29T15:39:51.170Z",
+          "profamilyId": null,
+          "scenterId": null
+        }
+      ]
+    },
+    "educations": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(educations_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "institution": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "degree": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "career": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": "Carrera sin especificar",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "graduationStatus": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "por_egresar",
+          "comment": null,
+          "special": [
+            "por_egresar",
+            "egresado",
+            "licenciado"
+          ],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "newProfamilyName": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "isValidated": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "validationNotes": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "experiences": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(experiences_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "company": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "position": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "startDate": {
+          "type": "DATE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "endDate": {
+          "type": "DATE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "careers": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(careers_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "isActive": {
+          "type": "BOOLEAN",
+          "allowNull": false,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "119",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "Ingeniería Civil",
+          "description": "Carrera en Ingeniería Civil",
+          "profamilyId": 1,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.476Z",
+          "updatedAt": "2025-09-24T14:05:40.476Z"
+        },
+        {
+          "id": 2,
+          "name": "Arquitectura Técnica",
+          "description": "Carrera en Arquitectura Técnica",
+          "profamilyId": 1,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.480Z",
+          "updatedAt": "2025-09-24T14:05:40.480Z"
+        },
+        {
+          "id": 3,
+          "name": "Construcción",
+          "description": "Carrera en Construcción",
+          "profamilyId": 1,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.484Z",
+          "updatedAt": "2025-09-24T14:05:40.484Z"
+        },
+        {
+          "id": 4,
+          "name": "Urbanismo",
+          "description": "Carrera en Urbanismo",
+          "profamilyId": 1,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.487Z",
+          "updatedAt": "2025-09-24T14:05:40.487Z"
+        },
+        {
+          "id": 5,
+          "name": "Ingeniería Mecánica",
+          "description": "Carrera en Ingeniería Mecánica",
+          "profamilyId": 2,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.490Z",
+          "updatedAt": "2025-09-24T14:05:40.490Z"
+        },
+        {
+          "id": 6,
+          "name": "Mecatrónica",
+          "description": "Carrera en Mecatrónica",
+          "profamilyId": 2,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.493Z",
+          "updatedAt": "2025-09-24T14:05:40.493Z"
+        },
+        {
+          "id": 7,
+          "name": "Automoción",
+          "description": "Carrera en Automoción",
+          "profamilyId": 2,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.496Z",
+          "updatedAt": "2025-09-24T14:05:40.496Z"
+        },
+        {
+          "id": 8,
+          "name": "Manufactura",
+          "description": "Carrera en Manufactura",
+          "profamilyId": 2,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.500Z",
+          "updatedAt": "2025-09-24T14:05:40.500Z"
+        },
+        {
+          "id": 9,
+          "name": "Ingeniería Eléctrica",
+          "description": "Carrera en Ingeniería Eléctrica",
+          "profamilyId": 3,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.502Z",
+          "updatedAt": "2025-09-24T14:05:40.502Z"
+        },
+        {
+          "id": 10,
+          "name": "Ingeniería de Potencia",
+          "description": "Carrera en Ingeniería de Potencia",
+          "profamilyId": 3,
+          "isActive": true,
+          "createdAt": "2025-09-24T14:05:40.505Z",
+          "updatedAt": "2025-09-24T14:05:40.505Z"
+        }
+      ]
+    },
+    "companies": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(companies_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "code": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "city": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "active": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "address": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "phone": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "email": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "web": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "rrhh": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "sector": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "main": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "userId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "5",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "TechSolutions España",
+          "code": "TS001",
+          "city": "Madrid",
+          "active": true,
+          "address": "Calle Gran Vía 123, Madrid",
+          "phone": "+34 91 123 45 67",
+          "email": "rrhh@techsolutions.es",
+          "web": "https://techsolutions.es",
+          "rrhh": null,
+          "sector": "Tecnología",
+          "main": null,
+          "description": "Empresa líder en desarrollo de software y soluciones tecnológicas.",
+          "userId": 1,
+          "createdAt": "2025-09-24T14:05:40.916Z",
+          "updatedAt": "2025-09-24T14:05:40.916Z"
+        },
+        {
+          "id": 2,
+          "name": "Constructora Moderna SL",
+          "code": "CM002",
+          "city": "Barcelona",
+          "active": true,
+          "address": "Avenida Diagonal 456, Barcelona",
+          "phone": "+34 93 456 78 90",
+          "email": "talento@constructora-moderna.com",
+          "web": "https://constructora-moderna.com",
+          "rrhh": null,
+          "sector": "Construcción",
+          "main": null,
+          "description": "Empresa constructora especializada en edificación sostenible.",
+          "userId": 2,
+          "createdAt": "2025-09-24T14:05:40.973Z",
+          "updatedAt": "2025-09-24T14:05:40.973Z"
+        },
+        {
+          "id": 3,
+          "name": "Clínica Salud Plus",
+          "code": "SP003",
+          "city": "Sevilla",
+          "active": true,
+          "address": "Calle de la Salud 789, Sevilla",
+          "phone": "+34 95 567 89 01",
+          "email": "recursos@saludplus.es",
+          "web": "https://saludplus.es",
+          "rrhh": null,
+          "sector": "Salud",
+          "main": null,
+          "description": "Centro médico privado especializado en atención primaria.",
+          "userId": 3,
+          "createdAt": "2025-09-24T14:05:41.032Z",
+          "updatedAt": "2025-09-24T14:05:41.032Z"
+        },
+        {
+          "id": 4,
+          "name": "Banco Innovador SA",
+          "code": "BI004",
+          "city": "Madrid",
+          "active": true,
+          "address": "Plaza del Banco 321, Madrid",
+          "phone": "+34 91 234 56 78",
+          "email": "empleo@bancoinnovador.es",
+          "web": "https://bancoinnovador.es",
+          "rrhh": null,
+          "sector": "Finanzas",
+          "main": null,
+          "description": "Entidad financiera moderna especializada en servicios bancarios digitales.",
+          "userId": 4,
+          "createdAt": "2025-09-24T14:05:41.087Z",
+          "updatedAt": "2025-09-24T14:05:41.087Z"
+        },
+        {
+          "id": 5,
+          "name": "Escuela Primaria Futuro",
+          "code": "EF005",
+          "city": "Valencia",
+          "active": true,
+          "address": "Calle Educación 654, Valencia",
+          "phone": "+34 96 345 67 89",
+          "email": "direccion@escuela-futuro.edu",
+          "web": "https://escuela-futuro.edu",
+          "rrhh": null,
+          "sector": "Educación",
+          "main": null,
+          "description": "Centro educativo privado especializado en educación infantil.",
+          "userId": 5,
+          "createdAt": "2025-09-24T14:05:41.143Z",
+          "updatedAt": "2025-09-24T14:05:41.143Z"
+        }
+      ]
+    },
+    "offers": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(offers_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "location": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "mode": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "type": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "period": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "schedule": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "min_hr": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": "200",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "car": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "sector": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tag": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "jobs": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "requisites": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "offer_profamilys": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(offer_profamilys_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "offerId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "scenters": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(scenters_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "code": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "city": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "active": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "address": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "phone": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "email": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "codigo_postal": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "4",
+      "sampleData": [
+        {
+          "id": 1,
+          "name": "Instituto Tecnológico Superior de Madrid",
+          "code": "ITS-MAD",
+          "city": "Madrid",
+          "active": true,
+          "address": "Calle Gran Vía, 123",
+          "phone": "+34 91 123 45 67",
+          "email": "info@its-madrid.edu",
+          "codigo_postal": null,
+          "createdAt": "2025-09-24T18:11:32.916Z",
+          "updatedAt": "2025-09-24T18:11:32.916Z"
+        },
+        {
+          "id": 2,
+          "name": "Centro de Formación Profesional Barcelona",
+          "code": "CFP-BCN",
+          "city": "Barcelona",
+          "active": true,
+          "address": "Avenida Diagonal, 456",
+          "phone": "+34 93 987 65 43",
+          "email": "info@cfp-barcelona.edu",
+          "codigo_postal": null,
+          "createdAt": "2025-09-24T18:11:32.930Z",
+          "updatedAt": "2025-09-24T18:11:32.930Z"
+        },
+        {
+          "id": 3,
+          "name": "Escuela Técnica Superior Sevilla",
+          "code": "ETS-SEV",
+          "city": "Sevilla",
+          "active": true,
+          "address": "Plaza de España, 789",
+          "phone": "+34 95 456 78 90",
+          "email": "info@ets-sevilla.edu",
+          "codigo_postal": null,
+          "createdAt": "2025-09-24T18:11:48.478Z",
+          "updatedAt": "2025-09-24T18:11:48.478Z"
+        },
+        {
+          "id": 4,
+          "name": "Instituto Profesional Valencia",
+          "code": "IP-VAL",
+          "city": "Valencia",
+          "active": true,
+          "address": "Calle de la Paz, 321",
+          "phone": "+34 96 123 45 67",
+          "email": "info@ip-valencia.edu",
+          "codigo_postal": null,
+          "createdAt": "2025-09-24T18:11:48.493Z",
+          "updatedAt": "2025-09-24T18:11:48.493Z"
+        }
+      ]
+    },
+    "tutors": {
+      "structure": {
+        "id": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "email": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "grade": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "degree": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tutorId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "tokens": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(tokens_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "amount": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Cantidad de tokens disponibles",
+          "special": [],
+          "primaryKey": false
+        },
+        "usedAmount": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Cantidad de tokens utilizados",
+          "special": [],
+          "primaryKey": false
+        },
+        "purchasedAmount": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Cantidad total de tokens comprados",
+          "special": [],
+          "primaryKey": false
+        },
+        "lastPurchaseDate": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Fecha de la última compra de tokens",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "applications": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(applications_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "offerId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "status": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "pending",
+          "comment": null,
+          "special": [
+            "pending",
+            "reviewed",
+            "interview_requested",
+            "accepted",
+            "rejected",
+            "withdrawn"
+          ],
+          "primaryKey": false
+        },
+        "appliedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "reviewedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "cvViewed": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": "Si la empresa ya vio el CV del candidato",
+          "special": [],
+          "primaryKey": false
+        },
+        "cvViewedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Cuándo la empresa vio el CV",
+          "special": [],
+          "primaryKey": false
+        },
+        "message": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Mensaje del estudiante al aplicar",
+          "special": [],
+          "primaryKey": false
+        },
+        "companyNotes": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Notas internas de la empresa",
+          "special": [],
+          "primaryKey": false
+        },
+        "rejectionReason": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Razón del rechazo si aplica",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "cvs": {
+      "structure": {
+        "id": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "email": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "phone": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "file": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "title": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "summary": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "contactEmail": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "contactPhone": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "professionalOrientation": {
+          "type": "JSON",
+          "allowNull": true,
+          "defaultValue": "{}",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "academicBackground": {
+          "type": "JSON",
+          "allowNull": true,
+          "defaultValue": "[]",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "skills": {
+          "type": "JSON",
+          "allowNull": true,
+          "defaultValue": "[]",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "workExperience": {
+          "type": "JSON",
+          "allowNull": true,
+          "defaultValue": "[]",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "isComplete": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": false,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "lastUpdated": {
+          "type": "TIMESTAMP WITHOUT TIME ZONE",
+          "allowNull": true,
+          "defaultValue": "CURRENT_TIMESTAMP",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "availability": {
+          "type": "CHARACTER VARYING(50)",
+          "allowNull": true,
+          "defaultValue": "flexible",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "workPreferences": {
+          "type": "JSON",
+          "allowNull": true,
+          "defaultValue": "{}",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "token_transactions": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(token_transactions_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Estudiante relacionado con la transacción (si aplica)",
+          "special": [],
+          "primaryKey": false
+        },
+        "type": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": "Tipo de transacción: compra, uso o reembolso",
+          "special": [
+            "purchase",
+            "usage",
+            "refund"
+          ],
+          "primaryKey": false
+        },
+        "action": {
+          "type": "USER-DEFINED",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Acción específica que consumió tokens",
+          "special": [
+            "view_cv",
+            "contact_student",
+            "buy_tokens"
+          ],
+          "primaryKey": false
+        },
+        "amount": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": "Cantidad de tokens (positiva para compras, negativa para usos)",
+          "special": [],
+          "primaryKey": false
+        },
+        "description": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Descripción de la transacción",
+          "special": [],
+          "primaryKey": false
+        },
+        "balanceAfter": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": "Balance de tokens después de la transacción",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "student_tokens": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(student_tokens_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "pendingPayment": {
+          "type": "NUMERIC",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Cantidad pendiente por pagar si es contratado",
+          "special": [],
+          "primaryKey": false
+        },
+        "totalEarned": {
+          "type": "NUMERIC",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Total ganado por contrataciones",
+          "special": [],
+          "primaryKey": false
+        },
+        "contractCount": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Número de veces contratado",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "user_companies": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(user_companies_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "userId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "role": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "admin",
+          "comment": null,
+          "special": [
+            "admin",
+            "manager",
+            "hr",
+            "viewer"
+          ],
+          "primaryKey": false
+        },
+        "isActive": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "assignedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "revealed_cvs": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(revealed_cvs_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "revealedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tokensUsed": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "2",
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "revealType": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "intelligent_search",
+          "comment": null,
+          "special": [
+            "intelligent_search",
+            "direct_search"
+          ],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "OfferSkill": {
+      "structure": {
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "offerId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "skillId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "UserScenter": {
+      "structure": {
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "userId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "scenterId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "StudentOffer": {
+      "structure": {
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "offerId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "CompanyCv": {
+      "structure": {
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "cvId": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "company_tokens": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(company_tokens_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tokenBalance": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Cantidad de tokens disponibles",
+          "special": [],
+          "primaryKey": false
+        },
+        "tokensUsed": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "0",
+          "comment": "Tokens gastados",
+          "special": [],
+          "primaryKey": false
+        },
+        "lastRecharge": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Última vez que se recargaron tokens",
+          "special": [],
+          "primaryKey": false
+        },
+        "rechargeAmount": {
+          "type": "INTEGER",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Cantidad de la última recarga",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "token_usages": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(token_usages_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "companyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "studentId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "tokensUsed": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "1",
+          "comment": "Tokens gastados en esta consulta",
+          "special": [],
+          "primaryKey": false
+        },
+        "action": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": "Tipo de acción que consumió tokens",
+          "special": [],
+          "primaryKey": false
+        },
+        "usedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "Session": {
+      "structure": {
+        "sid": {
+          "type": "CHARACTER VARYING(36)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "expires": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "data": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    },
+    "scenter_profamilys": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(scenter_profamilys_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "scenterId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "profamilyId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "12",
+      "sampleData": [
+        {
+          "id": 1,
+          "scenterId": 3,
+          "profamilyId": 43,
+          "createdAt": "2025-09-24T18:20:22.013Z",
+          "updatedAt": "2025-09-24T18:20:22.014Z"
+        },
+        {
+          "id": 2,
+          "scenterId": 3,
+          "profamilyId": 33,
+          "createdAt": "2025-09-24T18:20:22.022Z",
+          "updatedAt": "2025-09-24T18:20:22.022Z"
+        },
+        {
+          "id": 3,
+          "scenterId": 1,
+          "profamilyId": 63,
+          "createdAt": "2025-09-24T18:26:45.851Z",
+          "updatedAt": "2025-09-24T18:26:45.852Z"
+        },
+        {
+          "id": 4,
+          "scenterId": 1,
+          "profamilyId": 70,
+          "createdAt": "2025-09-24T18:26:45.861Z",
+          "updatedAt": "2025-09-24T18:26:45.861Z"
+        },
+        {
+          "id": 5,
+          "scenterId": 1,
+          "profamilyId": 67,
+          "createdAt": "2025-09-24T18:26:45.864Z",
+          "updatedAt": "2025-09-24T18:26:45.864Z"
+        },
+        {
+          "id": 6,
+          "scenterId": 2,
+          "profamilyId": 66,
+          "createdAt": "2025-09-24T18:26:45.867Z",
+          "updatedAt": "2025-09-24T18:26:45.867Z"
+        },
+        {
+          "id": 7,
+          "scenterId": 2,
+          "profamilyId": 71,
+          "createdAt": "2025-09-24T18:26:45.870Z",
+          "updatedAt": "2025-09-24T18:26:45.870Z"
+        },
+        {
+          "id": 8,
+          "scenterId": 2,
+          "profamilyId": 72,
+          "createdAt": "2025-09-24T18:26:45.874Z",
+          "updatedAt": "2025-09-24T18:26:45.874Z"
+        },
+        {
+          "id": 9,
+          "scenterId": 3,
+          "profamilyId": 73,
+          "createdAt": "2025-09-24T18:26:45.879Z",
+          "updatedAt": "2025-09-24T18:26:45.879Z"
+        },
+        {
+          "id": 10,
+          "scenterId": 4,
+          "profamilyId": 65,
+          "createdAt": "2025-09-24T18:26:45.881Z",
+          "updatedAt": "2025-09-24T18:26:45.881Z"
+        }
+      ]
+    },
+    "educationalInstitutions": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(\"educationalInstitutions_id_seq\"::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "name": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "type": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "university",
+          "comment": null,
+          "special": [
+            "university",
+            "technical_institute",
+            "high_school",
+            "other"
+          ],
+          "primaryKey": false
+        },
+        "city": {
+          "type": "CHARACTER VARYING(255)",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "active": {
+          "type": "BOOLEAN",
+          "allowNull": false,
+          "defaultValue": true,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "36",
+      "sampleData": [
+        {
+          "id": 20,
+          "name": "Universidad Complutense de Madrid",
+          "type": "university",
+          "city": "Madrid",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:06.902Z",
+          "updatedAt": "2025-09-25T14:48:06.902Z"
+        },
+        {
+          "id": 21,
+          "name": "Universidad Politécnica de Madrid",
+          "type": "university",
+          "city": "Madrid",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.111Z",
+          "updatedAt": "2025-09-25T14:48:07.111Z"
+        },
+        {
+          "id": 22,
+          "name": "Universidad Autónoma de Madrid",
+          "type": "university",
+          "city": "Madrid",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.113Z",
+          "updatedAt": "2025-09-25T14:48:07.113Z"
+        },
+        {
+          "id": 23,
+          "name": "Universidad de Barcelona",
+          "type": "university",
+          "city": "Barcelona",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.115Z",
+          "updatedAt": "2025-09-25T14:48:07.115Z"
+        },
+        {
+          "id": 24,
+          "name": "Universidad Politécnica de Catalunya",
+          "type": "university",
+          "city": "Barcelona",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.116Z",
+          "updatedAt": "2025-09-25T14:48:07.116Z"
+        },
+        {
+          "id": 25,
+          "name": "Universidad de Valencia",
+          "type": "university",
+          "city": "Valencia",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.118Z",
+          "updatedAt": "2025-09-25T14:48:07.118Z"
+        },
+        {
+          "id": 26,
+          "name": "Universidad de Sevilla",
+          "type": "university",
+          "city": "Sevilla",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.121Z",
+          "updatedAt": "2025-09-25T14:48:07.121Z"
+        },
+        {
+          "id": 27,
+          "name": "Universidad de Granada",
+          "type": "university",
+          "city": "Granada",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.122Z",
+          "updatedAt": "2025-09-25T14:48:07.122Z"
+        },
+        {
+          "id": 28,
+          "name": "Universidad de Málaga",
+          "type": "university",
+          "city": "Málaga",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.124Z",
+          "updatedAt": "2025-09-25T14:48:07.124Z"
+        },
+        {
+          "id": 29,
+          "name": "Universidad de Zaragoza",
+          "type": "university",
+          "city": "Zaragoza",
+          "active": true,
+          "createdAt": "2025-09-25T14:48:07.126Z",
+          "updatedAt": "2025-09-25T14:48:07.126Z"
+        }
+      ]
+    },
+    "offer_skills": {
+      "structure": {
+        "id": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": "nextval(offer_skills_id_seq::regclass)",
+          "comment": null,
+          "special": [],
+          "primaryKey": true
+        },
+        "offerId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "skillId": {
+          "type": "INTEGER",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "requiredLevel": {
+          "type": "USER-DEFINED",
+          "allowNull": false,
+          "defaultValue": "beginner",
+          "comment": "Nivel mínimo requerido para esta skill",
+          "special": [
+            "beginner",
+            "intermediate",
+            "advanced",
+            "expert"
+          ],
+          "primaryKey": false
+        },
+        "isMandatory": {
+          "type": "BOOLEAN",
+          "allowNull": true,
+          "defaultValue": true,
+          "comment": "Si la skill es obligatoria o deseable",
+          "special": [],
+          "primaryKey": false
+        },
+        "weight": {
+          "type": "NUMERIC",
+          "allowNull": true,
+          "defaultValue": "1",
+          "comment": "Peso de importancia de esta skill en el matching (0.1 - 2.0)",
+          "special": [],
+          "primaryKey": false
+        },
+        "notes": {
+          "type": "TEXT",
+          "allowNull": true,
+          "defaultValue": null,
+          "comment": "Notas adicionales sobre los requerimientos de esta skill",
+          "special": [],
+          "primaryKey": false
+        },
+        "createdAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        },
+        "updatedAt": {
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "allowNull": false,
+          "defaultValue": null,
+          "comment": null,
+          "special": [],
+          "primaryKey": false
+        }
+      },
+      "recordCount": "0",
+      "sampleData": []
+    }
+  },
+  "version": "1.0"
+}

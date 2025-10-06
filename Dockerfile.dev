@@ -1,0 +1,44 @@
+# ==========================================
+# DOCKERFILE PARA DESARROLLO - BACKEND
+# ==========================================
+
+FROM node:18-alpine
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache \
+    git \
+    curl \
+    vim \
+    && rm -rf /var/cache/apk/*
+
+# Crear usuario no-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+WORKDIR /usr/src/app
+
+# Copiar archivos de configuración de paquetes
+COPY package*.json ./
+
+# Instalar dependencias de desarrollo
+RUN npm ci
+
+# Copiar código fuente
+COPY . .
+
+# Crear directorios necesarios
+RUN mkdir -p logs uploads
+
+# Cambiar permisos
+RUN chown -R nextjs:nodejs /usr/src/app
+USER nextjs
+
+# Exponer puerto
+EXPOSE 5000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
+
+# Comando por defecto (sobrescrito en docker-compose.override.yml)
+CMD ["npm", "run", "dev"]
