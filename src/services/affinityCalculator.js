@@ -127,60 +127,27 @@
       }
     }
 
-    // 🔥 NUEVO ALGORITMO DE COMBINACIÓN: SKILLS PRIMERO, PROFAMILY COMO BONUS
-    let finalScore;
+    // 🔥 NUEVO ALGORITMO: PROFAMILY 50% + SKILLS 50%
+    // Calcular score de profamily (0-50 puntos convertidos a 0-1)
+    const profamilyScore = profamilyAffinity.points / 50; // 0-1 scale
 
-    // Calcular score base de skills (70-80% del score total)
-    let skillBaseScore = score * proportionalFactor;
+    // Calcular score de skills (0-50 puntos convertidos a 0-1)
+    const skillPoints = this._calculateSkillPoints(companySkills, studentSkills, matches, matchingSkills);
+    const skillScore = skillPoints / 50; // 0-1 scale
 
-    // Aplicar bonificaciones de skills
-    if (hasPremiumMatch && criticalSkillsMatched >= 2) {
-      skillBaseScore *= 1.15; // Reducido pero aún significativo
-    } else if (hasPremiumMatch) {
-      skillBaseScore *= 1.08;
-    }
-
-    if (hasValue2Match >= 2) skillBaseScore *= 1.03;
-    if (hasSuperiorRating >= 2) skillBaseScore *= 1.08;
-
-    // Bonus por consistencia
-    if (consistencyScore >= 4) { // Umbral más bajo
-      skillBaseScore *= 1.08;
-    }
-
-    // Bonus por alta cobertura
-    if (coverageFactor >= 0.8) {
-      skillBaseScore *= 1.12;
-    }
-
-    // 🔥 PROFAMILY AHORA ES BONUS (20-30% del score total)
-    let profamilyBonus = 0;
-    if (profamilyAffinity.level === "exact_match") {
-      // Profamily exacta: bonus significativo pero no dominante
-      profamilyBonus = profamilyAffinity.score * 1.5; // 2.4 para verificado, 1.95 para no verificado
-    } else if (profamilyAffinity.level === "related_match") {
-      // Profamily relacionada: bonus moderado
-      profamilyBonus = profamilyAffinity.score * 1.0; // 1.6 para verificado, 1.3 para no verificado
-    }
-    // Si no hay coincidencia de profamily, bonus = 0
-
-    // 🔥 COMBINAR: 75% skills + 25% profamily bonus
-    finalScore = (skillBaseScore * 0.75) + (profamilyBonus * 0.25);
+    // 🔥 COMBINACIÓN FINAL: 50% profamily + 50% skills
+    const finalScore = (profamilyScore * 0.5) + (skillScore * 0.5);
 
     // 🔥 NUEVO: Asegurar que el score mínimo sea razonable si hay alguna coincidencia
-    if (matches > 0 && finalScore < 1.0) {
-      finalScore = Math.max(finalScore, 1.0 + (matches * 0.2));
+    let normalizedScore;
+    if (matches > 0 && finalScore < 0.1) {
+      normalizedScore = Math.max(finalScore, 0.1 + (matches * 0.02));
+    } else {
+      normalizedScore = finalScore;
     }
 
     // 🔥 NUEVO: Normalización más inteligente
-    let normalizedScore;
-    if (coverageFactor >= 0.9 && matches >= totalCompanySkills * 0.8) {
-      // Cobertura casi perfecta: mantener score alto
-      normalizedScore = Math.min(10, finalScore * 0.95);
-    } else {
-      // Normalización estándar
-      normalizedScore = this._normalizeScore(finalScore, totalCompanySkills, coverageFactor);
-    }
+    normalizedScore = Math.min(1.0, normalizedScore); // Máximo 1.0 (100 puntos totales)
 
     // 🔥 INTEGRACIÓN: Factores expandidos
     const factors = {
@@ -195,10 +162,11 @@
       skillDiversityBonus: totalStudentSkills > totalCompanySkills,
       perfectMatch: matches === totalCompanySkills && hasSuperiorRating === 0,
       profamilyAffinity,
-      skillBaseScore: Math.round(skillBaseScore * 100) / 100,
-      profamilyBonus: Math.round(profamilyBonus * 100) / 100,
-      skillWeight: 0.75,
-      profamilyWeight: 0.25
+      skillPoints: skillPoints,
+      profamilyPoints: profamilyAffinity.points,
+      skillWeight: 0.5,
+      profamilyWeight: 0.5,
+      totalMaxPoints: 100
     };
 
     const result = this._createAffinityResult(
@@ -292,11 +260,11 @@
   }
 
   _normalizeScore(score, totalRequired, coverageFactor) {
-    // Normalización mejorada que considera la cobertura
-    const baseNormalization = (score / totalRequired) * 2;
-    const coverageAdjustment = Math.log(1 + coverageFactor) / Math.log(2);
+    // Normalización mejorada que considera la cobertura para escala 0-1
+    const baseNormalization = (score / 1.0) * 0.8; // Base 80% del score
+    const coverageAdjustment = Math.log(1 + coverageFactor) / Math.log(2) * 0.2; // 20% adicional por cobertura
 
-    return Math.min(10, baseNormalization * coverageAdjustment);
+    return Math.min(1.0, baseNormalization + coverageAdjustment);
   }
 
   //  MÉTODO NUEVO: Crear resultado con nivel y explicación
@@ -308,7 +276,7 @@
     const level = this._scoreToLevel(roundedScore, coverage);
 
     //  GENERAR EXPLICACIÓN LEGIBLE
-    const explanation = this._generateExplanation(roundedScore, matches, totalRequired, coverage, level);
+    const explanation = this._generateExplanation(roundedScore, matches, totalRequired, coverage, level, factors);
 
     return {
       score: roundedScore,
@@ -319,41 +287,53 @@
       coveragePercentage: coverage,
       matchingSkills,
       explanation,
-      factors
+      factors,
+      // 🔥 NUEVO: Información detallada de puntos
+      pointsBreakdown: {
+        profamilyPoints: factors.profamilyPoints || 0,
+        skillPoints: factors.skillPoints || 0,
+        totalPoints: (factors.profamilyPoints || 0) + (factors.skillPoints || 0),
+        maxTotalPoints: 100
+      }
     };
   }
 
   //  OPTIMIZACIÓN: Algoritmo de nivel mejorado con más granularidad
   _scoreToLevel(score, coverage) {
-    // Sistema más estricto y balanceado
-    if (score >= 8.0 && coverage >= 85) return "muy alto";
-    if (score >= 6.5 && coverage >= 75) return "muy alto";
-    if (score >= 5.0 && coverage >= 65) return "alto";
-    if (score >= 4.0 && coverage >= 55) return "alto";
-    if (score >= 3.0 && coverage >= 45) return "medio";
-    if (score >= 2.0 && coverage >= 35) return "medio";
-    if (score >= 1.0 && coverage >= 20) return "bajo";
+    // Sistema más estricto y balanceado para escala 0-1
+    if (score >= 0.9 && coverage >= 85) return "muy alto";
+    if (score >= 0.75 && coverage >= 75) return "muy alto";
+    if (score >= 0.6 && coverage >= 65) return "alto";
+    if (score >= 0.5 && coverage >= 55) return "alto";
+    if (score >= 0.35 && coverage >= 45) return "medio";
+    if (score >= 0.25 && coverage >= 35) return "medio";
+    if (score >= 0.15 && coverage >= 20) return "bajo";
     if (score > 0 || coverage > 0) return "bajo";
     return "sin datos";
   }
 
   //  OPTIMIZACIÓN: Explicaciones más detalladas y útiles
-  _generateExplanation(score, matches, totalRequired, coverage, level) {
+  _generateExplanation(score, matches, totalRequired, coverage, level, factors) {
     if (matches === 0) {
       return "No se encontraron coincidencias en las habilidades requeridas. Considere ampliar los criterios de búsqueda.";
     }
 
+    const profamilyPoints = factors.profamilyPoints || 0;
+    const skillPoints = factors.skillPoints || 0;
+    const totalPoints = profamilyPoints + skillPoints;
+
     const baseInfo = `${matches}/${totalRequired} habilidades coincidentes (${coverage}% cobertura)`;
+    const pointsInfo = `Puntuación: ${totalPoints}/100 puntos (${profamilyPoints} profamily + ${skillPoints} skills)`;
 
     const explanations = {
-      "muy alto": ` ${baseInfo}. Candidato excepcional con excelente afinidad para el puesto. Altamente recomendado para entrevista inmediata.`,
-      "alto": ` ${baseInfo}. Candidato sólido con buena afinidad. Recomendado para proceso de selección.`,
-      "medio": ` ${baseInfo}. Candidato con potencial moderado. Revisar experiencia específica y considerar entrevista.`,
-      "bajo": ` ${baseInfo}. Afinidad limitada. Evaluar si el candidato puede desarrollar habilidades faltantes.`,
+      "muy alto": ` ${baseInfo}. Candidato excepcional con excelente afinidad para el puesto. ${pointsInfo}. Altamente recomendado para entrevista inmediata.`,
+      "alto": ` ${baseInfo}. Candidato sólido con buena afinidad. ${pointsInfo}. Recomendado para proceso de selección.`,
+      "medio": ` ${baseInfo}. Candidato con potencial moderado. ${pointsInfo}. Revisar experiencia específica y considerar entrevista.`,
+      "bajo": ` ${baseInfo}. Afinidad limitada. ${pointsInfo}. Evaluar si el candidato puede desarrollar habilidades faltantes.`,
       "sin datos": "No se encontraron datos suficientes para evaluar la afinidad. Revisar perfil del candidato."
     };
 
-    return explanations[level] || `${baseInfo}. Puntuación: ${score.toFixed(1)}/10`;
+    return explanations[level] || `${baseInfo}. ${pointsInfo}. Puntuación: ${(score * 100).toFixed(1)}/100`;
   }
 
   /**
@@ -604,47 +584,136 @@
   }
 
   /**
-   *  NUEVO: Calcular afinidad basada en familia profesional con nuevas reglas
-   *  - Same unverified/pending: 30% (score base = 5.0)
-   *  - Same verified: 50% (score base = 8.0)
-   *  - Related unverified: 20%, Related verified: 40%
+   *  NUEVO: Calcular afinidad basada en familia profesional con reglas específicas
+   *  VERIFICADO IGUAL: 50 puntos
+   *  VERIFICADO AFÍN: 30 puntos
+   *  NO VERIFICADO IGUAL: 25 puntos
+   *  NO VERIFICADO AFÍN: 15 puntos
    */
   _calculateProfamilyAffinity(profamilyId, offerProfamilyIds, studentVerificationStatus = 'unverified') {
     if (!profamilyId) {
-      return { score: 1.0, level: "none", details: "Sin familia profesional definida" };
+      return { score: 0, level: "none", details: "Sin familia profesional definida", points: 0 };
     }
 
     if (!offerProfamilyIds || offerProfamilyIds.length === 0) {
-      return { score: 1.0, level: "neutral", details: "Oferta sin familias profesionales especificadas" };
+      return { score: 0, level: "neutral", details: "Oferta sin familias profesionales especificadas", points: 0 };
     }
 
-    // Verificar si la profamily del estudiante coincide exactamente con alguna de la oferta
+    const isVerified = studentVerificationStatus === 'verified';
     const exactMatch = offerProfamilyIds.includes(profamilyId);
 
+    let points = 0;
+    let level = "";
+    let details = "";
+
     if (exactMatch) {
-      // Coincidencia exacta: depende del estado de verificación
-      const isVerified = studentVerificationStatus === 'verified';
-      const score = isVerified ? 1.6 : 1.3; // 8.0 vs 5.0 base score (multiplicado por 5 en el cálculo principal)
-      return {
-        score: score,
-        level: "exact_match",
-        details: `Familia profesional coincide exactamente (${studentVerificationStatus})`
-      };
+      // Coincidencia EXACTA
+      if (isVerified) {
+        points = 50; // Información verificada IGUAL
+        level = "exact_verified";
+        details = "Familia profesional verificada coincide exactamente";
+      } else {
+        points = 25; // Información NO verificada IGUAL
+        level = "exact_unverified";
+        details = "Familia profesional no verificada coincide exactamente";
+      }
+    } else {
+      // 🔥 CORRECCIÓN: Solo dar puntos por AFÍN si realmente hay relación
+      // Por ahora, si no hay coincidencia exacta, 0 puntos
+      // TODO: Implementar lógica real para detectar profamilys relacionadas/afines
+      points = 0; // No hay coincidencia
+      level = "no_match";
+      details = "Familia profesional no coincide con la oferta";
     }
 
-    // TODO: Implementar lógica para profamilys relacionadas
-    // Por ahora, si no hay coincidencia exacta, aplicar penalización leve
+    // Convertir puntos a score (0-1) para compatibilidad con el algoritmo existente
+    const score = points / 50; // Máximo 50 puntos = score 1.0
+
     return {
-      score: 0.95, // Penalización leve por no coincidir
-      level: "no-match",
-      details: "Familia profesional no coincide con la oferta"
+      score: score,
+      level: level,
+      details: details,
+      points: points,
+      maxPoints: 50
     };
   }
 
   /**
-   *  NUEVO: Calcular afinidad bidireccional (estudiante -> oferta)
-   * Este método calcula qué tan adecuado es un estudiante para una oferta específica
+   *  NUEVO: Calcular puntos de skills (0-50) según reglas específicas
+   *  Máximo 5 skills IGUALES con dominio ALTO = 50 puntos
+   *  Redistribuir según coincidencias y nivel de dominio
    */
+  _calculateSkillPoints(offerSkills, studentSkills, totalMatches, matchingSkills) {
+    if (totalMatches === 0) return 0;
+
+    // Contar skills con diferentes niveles de coincidencia
+    let exactHighLevel = 0; // Skills exactas con nivel alto (3)
+    let exactMediumLevel = 0; // Skills exactas con nivel medio (2)
+    let exactLowLevel = 0; // Skills exactas con nivel bajo (1)
+    let superiorMatches = 0; // Skills donde estudiante supera el nivel requerido
+
+    matchingSkills.forEach(match => {
+      const studentLevel = match.studentLevel;
+      const companyLevel = match.companyLevel;
+
+      if (studentLevel >= companyLevel) {
+        // Coincidencia exacta o superior
+        if (studentLevel >= 3) {
+          exactHighLevel++;
+        } else if (studentLevel >= 2) {
+          exactMediumLevel++;
+        } else {
+          exactLowLevel++;
+        }
+
+        if (studentLevel > companyLevel) {
+          superiorMatches++;
+        }
+      }
+    });
+
+    // 🔥 SISTEMA DE PUNTUACIÓN: Máximo 50 puntos para 5+ skills con nivel alto
+    let skillPoints = 0;
+
+    // Base: 10 puntos por cada skill con nivel alto (máximo 5 skills = 50 puntos)
+    const highLevelPoints = Math.min(exactHighLevel, 5) * 10;
+    skillPoints += highLevelPoints;
+
+    // Bonus adicional por skills de nivel alto extras (más de 5)
+    if (exactHighLevel > 5) {
+      const extraHighSkills = exactHighLevel - 5;
+      skillPoints += extraHighSkills * 5; // 5 puntos cada una adicional
+    }
+
+    // Bonus por skills de nivel medio (4 puntos cada una)
+    skillPoints += exactMediumLevel * 4;
+
+    // Bonus por skills de nivel bajo (2 puntos cada una)
+    skillPoints += exactLowLevel * 2;
+
+    // Bonus por superar el nivel requerido (2 puntos cada una)
+    skillPoints += superiorMatches * 2;
+
+    // 🔥 NUEVO: Factor de cobertura para premiar coincidencias completas
+    const totalRequiredSkills = Object.keys(offerSkills).length;
+    const coverageFactor = totalMatches / totalRequiredSkills;
+
+    if (coverageFactor >= 0.8) {
+      skillPoints *= 1.1; // +10% por cobertura alta
+    } else if (coverageFactor >= 0.6) {
+      skillPoints *= 1.05; // +5% por cobertura media
+    }
+
+    // 🔥 NUEVO: Penalización por skills faltantes críticas
+    const missingSkills = totalRequiredSkills - totalMatches;
+    if (missingSkills > 0) {
+      const penaltyFactor = Math.max(0.7, 1 - (missingSkills * 0.1)); // Máxima penalización 30%
+      skillPoints *= penaltyFactor;
+    }
+
+    // Asegurar máximo 50 puntos
+    return Math.min(50, Math.round(skillPoints));
+  }
   calculateStudentToOfferAffinity(student, offer) {
     // Extraer skills del estudiante - NUEVA ARQUITECTURA CV SKILLS
     const studentSkills = {};
