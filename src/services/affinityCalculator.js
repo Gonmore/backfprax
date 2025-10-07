@@ -324,25 +324,36 @@
   //  OPTIMIZACIÓN: Explicaciones más detalladas y útiles
   _generateExplanation(score, matches, totalRequired, coverage, level, factors) {
     if (matches === 0) {
-      return "No se encontraron coincidencias en las habilidades requeridas. Considere ampliar los criterios de búsqueda.";
+      return "Este candidato no cuenta con las habilidades técnicas requeridas para el puesto.";
     }
 
     const profamilyPoints = factors.profamilyPoints || 0;
     const skillPoints = factors.skillPoints || 0;
     const totalPoints = profamilyPoints + skillPoints;
 
-    const baseInfo = `${matches}/${totalRequired} habilidades coincidentes (${coverage}% cobertura)`;
-    const pointsInfo = `Puntuación: ${totalPoints}/100 puntos (${profamilyPoints} profamily + ${skillPoints} skills)`;
+    // 🔥 MEJORADO: Mensaje más amigable sin detalles técnicos
+    const coverageText = coverage >= 80 ? "la mayoría de" : 
+                        coverage >= 50 ? "varias de" : 
+                        coverage >= 30 ? "algunas de" : "pocas de";
+    
+    const baseInfo = `Coincide con ${coverageText} las habilidades buscadas`;
+    
+    // 🔥 INFORMACIÓN DE VERIFICACIÓN ACADÉMICA
+    const verificationInfo = factors.profamilyAffinity?.level === 'exact_verified' 
+      ? " ✓ Información académica verificada por centro de estudios."
+      : factors.profamilyAffinity?.level === 'exact_unverified'
+      ? " ⚠ Información académica pendiente de verificación."
+      : "";
 
     const explanations = {
-      "muy alto": ` ${baseInfo}. Candidato excepcional con excelente afinidad para el puesto. ${pointsInfo}. Altamente recomendado para entrevista inmediata.`,
-      "alto": ` ${baseInfo}. Candidato sólido con buena afinidad. ${pointsInfo}. Recomendado para proceso de selección.`,
-      "medio": ` ${baseInfo}. Candidato con potencial moderado. ${pointsInfo}. Revisar experiencia específica y considerar entrevista.`,
-      "bajo": ` ${baseInfo}. Afinidad limitada. ${pointsInfo}. Evaluar si el candidato puede desarrollar habilidades faltantes.`,
-      "sin datos": "No se encontraron datos suficientes para evaluar la afinidad. Revisar perfil del candidato."
+      "muy alto": `${baseInfo}. Candidato excepcional con excelente perfil para el puesto.${verificationInfo} Puntuación: ${totalPoints}/100. Altamente recomendado.`,
+      "alto": `${baseInfo}. Candidato sólido con buen perfil para el puesto.${verificationInfo} Puntuación: ${totalPoints}/100. Recomendado para entrevista.`,
+      "medio": `${baseInfo}. Candidato con potencial moderado.${verificationInfo} Puntuación: ${totalPoints}/100. Considerar para proceso de selección.`,
+      "bajo": `${baseInfo}. Perfil con afinidad limitada.${verificationInfo} Puntuación: ${totalPoints}/100. Evaluar si puede desarrollar habilidades faltantes.`,
+      "sin datos": "Perfil incompleto. No hay suficiente información para evaluar la afinidad."
     };
 
-    return explanations[level] || `${baseInfo}. ${pointsInfo}. Puntuación: ${(score * 100).toFixed(1)}/100`;
+    return explanations[level] || `${baseInfo}.${verificationInfo} Puntuación: ${totalPoints}/100`;
   }
 
   /**
