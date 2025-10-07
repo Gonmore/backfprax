@@ -51,9 +51,20 @@
     const totalStudentSkills = Object.keys(studentSkills).length;
 
     if (totalCompanySkills === 0) {
-      // 🔥 NUEVO: Si no hay skills requeridos, score basado solo en profamily (muy bajo)
-      const baseScore = profamilyAffinity.score * 2; // Score máximo 3.2 si profamily verificado
-      return this._createAffinityResult(baseScore, 0, 0, [], { profamilyAffinity });
+      // 🔥 NUEVO: Si no hay skills requeridos, score basado SOLO en profamily (0-1 scale)
+      const profamilyScore = profamilyAffinity.points / 50; // 0-1 scale (máximo 1.0)
+
+      // 🔥 Crear factors con información de profamily para el breakdown
+      const factors = {
+        profamilyAffinity,
+        skillPoints: 0,
+        profamilyPoints: profamilyAffinity.points,
+        skillWeight: 0.5,
+        profamilyWeight: 0.5,
+        totalMaxPoints: 100
+      };
+
+      return this._createAffinityResult(profamilyScore, 0, 0, [], factors);
     }
 
     // 🔥 NUEVO ALGORITMO: SKILLS SON EL FACTOR PRINCIPAL (70-80% del score)

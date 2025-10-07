@@ -579,16 +579,18 @@ export const getCompanyOffersWithCandidates = async (req, res) => {
                 const student = await Student.findByPk(app.studentId, {
                     include: [
                         {
-                            model: Skill,
-                            as: 'skills',
-                            through: {
-                                attributes: ['proficiencyLevel', 'yearsOfExperience']
-                            }
-                        },
-                        {
                             model: Cv,
                             as: 'cv',
                             attributes: ['id', 'academicBackground', 'academicVerificationStatus'],
+                            include: [{
+                                model: CvSkill,
+                                as: 'cvSkills',
+                                include: [{
+                                    model: Skill,
+                                    as: 'skill',
+                                    attributes: ['id', 'name']
+                                }]
+                            }],
                             required: false
                         },
                         {
@@ -618,18 +620,18 @@ export const getCompanyOffersWithCandidates = async (req, res) => {
                         }
                     }
 
-                    // 🔥 CONVERTIR SKILLS DEL ESTUDIANTE
+                    // 🔥 CONVERTIR SKILLS DEL ESTUDIANTE (CV SKILLS)
                     const studentSkills = {};
-                    if (student.skills && student.skills.length > 0) {
-                        student.skills.forEach(skill => {
+                    if (student.cv?.cvSkills && student.cv.cvSkills.length > 0) {
+                        student.cv.cvSkills.forEach(cvSkill => {
                             const levelMap = {
-                                'beginner': 1,
-                                'intermediate': 2,
-                                'advanced': 3,
-                                'expert': 4
+                                'bajo': 1,
+                                'medio': 2,
+                                'alto': 3,
+                                'experto': 4
                             };
-                            const proficiencyLevel = skill.StudentSkill?.proficiencyLevel || skill.student_skills?.proficiencyLevel || 'beginner';
-                            studentSkills[skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
+                            const proficiencyLevel = cvSkill.proficiencyLevel || 'bajo';
+                            studentSkills[cvSkill.skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
                         });
                     }
 
@@ -803,16 +805,18 @@ export const getApplicationsByOffer = async (req, res) => {
             const student = await Student.findByPk(app.studentId, {
                 include: [
                     {
-                        model: Skill,
-                        as: 'skills',
-                        through: {
-                            attributes: ['proficiencyLevel', 'yearsOfExperience']
-                        }
-                    },
-                    {
                         model: Cv,
                         as: 'cv',
                         attributes: ['id', 'academicBackground', 'academicVerificationStatus'],
+                        include: [{
+                            model: CvSkill,
+                            as: 'cvSkills',
+                            include: [{
+                                model: Skill,
+                                as: 'skill',
+                                attributes: ['id', 'name']
+                            }]
+                        }],
                         required: false
                     },
                     {
@@ -842,20 +846,20 @@ export const getApplicationsByOffer = async (req, res) => {
                     }
                 }
 
-                // 🔥 CONVERTIR SKILLS DEL ESTUDIANTE
+                // 🔥 CONVERTIR SKILLS DEL ESTUDIANTE (CV SKILLS)
                 const studentSkills = {};
-                if (student.skills && student.skills.length > 0) {
-                    student.skills.forEach(skill => {
+                if (student.cv?.cvSkills && student.cv.cvSkills.length > 0) {
+                    student.cv.cvSkills.forEach(cvSkill => {
                         const levelMap = {
-                            'beginner': 1,
-                            'intermediate': 2,
-                            'advanced': 3,
-                            'expert': 4
+                            'bajo': 1,
+                            'medio': 2,
+                            'alto': 3,
+                            'experto': 4
                         };
-                        const proficiencyLevel = skill.StudentSkill?.proficiencyLevel || skill.student_skills?.proficiencyLevel || 'beginner';
-                        studentSkills[skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
+                        const proficiencyLevel = cvSkill.proficiencyLevel || 'bajo';
+                        studentSkills[cvSkill.skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
                     });
-                    console.log(`✅ Estudiante ${student.user.name} ${student.user.surname} tiene ${student.skills.length} skills:`, studentSkills);
+                    console.log(`✅ Estudiante ${student.user.name} ${student.user.surname} tiene ${student.cv.cvSkills.length} skills:`, studentSkills);
                 } else {
                     console.log(`⚠️ Estudiante ${student.user.name} ${student.user.surname} NO tiene skills asignadas`);
                 }
@@ -957,16 +961,18 @@ async function getOffersWithAptitude(req, res) {
             where: { userId },
             include: [
                 {
-                    model: Skill,
-                    as: 'skills',
-                    through: {
-                        attributes: ['proficiencyLevel', 'yearsOfExperience']
-                    }
-                },
-                {
                     model: Cv,
                     as: 'cv',
                     attributes: ['id', 'academicBackground', 'academicVerificationStatus'],
+                    include: [{
+                        model: CvSkill,
+                        as: 'cvSkills',
+                        include: [{
+                            model: Skill,
+                            as: 'skill',
+                            attributes: ['id', 'name']
+                        }]
+                    }],
                     required: false
                 }
             ]
@@ -1004,18 +1010,18 @@ async function getOffersWithAptitude(req, res) {
         // 2. Convertir skills del estudiante al formato esperado por el calculador
         console.log('🔄 Convirtiendo skills del estudiante...');
         const studentSkills = {};
-        if (student.skills && student.skills.length > 0) {
-            student.skills.forEach(skill => {
+        if (student.cv?.cvSkills && student.cv.cvSkills.length > 0) {
+            student.cv.cvSkills.forEach(cvSkill => {
                 // Convertir proficiencyLevel a número para el calculador
                 const levelMap = {
-                    'beginner': 1,
-                    'intermediate': 2,
-                    'advanced': 3,
-                    'expert': 4
+                    'bajo': 1,
+                    'medio': 2,
+                    'alto': 3,
+                    'experto': 4
                 };
-                // Acceder correctamente a los atributos de la tabla intermedia
-                const proficiencyLevel = skill.StudentSkill?.proficiencyLevel || skill.student_skills?.proficiencyLevel || 'beginner';
-                studentSkills[skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
+                // Acceder correctamente a los atributos
+                const proficiencyLevel = cvSkill.proficiencyLevel || 'bajo';
+                studentSkills[cvSkill.skill.name.toLowerCase()] = levelMap[proficiencyLevel] || 1;
             });
         }
 
