@@ -298,18 +298,16 @@
     };
   }
 
-  //  OPTIMIZACIÓN: Algoritmo de nivel mejorado con más granularidad
+  //  OPTIMIZACIÓN: Algoritmo de nivel mejorado con rangos específicos (nunca "sin datos")
   _scoreToLevel(score, coverage) {
-    // Sistema más estricto y balanceado para escala 0-1
-    if (score >= 0.9 && coverage >= 85) return "muy alto";
-    if (score >= 0.75 && coverage >= 75) return "muy alto";
-    if (score >= 0.6 && coverage >= 65) return "alto";
-    if (score >= 0.5 && coverage >= 55) return "alto";
-    if (score >= 0.35 && coverage >= 45) return "medio";
-    if (score >= 0.25 && coverage >= 35) return "medio";
-    if (score >= 0.15 && coverage >= 20) return "bajo";
-    if (score > 0 || coverage > 0) return "bajo";
-    return "sin datos";
+    // Convertir score 0-1 a porcentaje 0-100
+    const percentage = Math.round(score * 100);
+
+    // Rangos específicos del usuario (nunca "sin datos")
+    if (percentage >= 81) return "muy alto";
+    if (percentage >= 61) return "alto";
+    if (percentage >= 31) return "medio";
+    return "bajo"; // 0-30 siempre será "bajo"
   }
 
   //  OPTIMIZACIÓN: Explicaciones más detalladas y útiles

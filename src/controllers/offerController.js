@@ -643,13 +643,13 @@ export const getCompanyOffersWithCandidates = async (req, res) => {
                         });
                         console.log(`✅ Afinidad calculada para ${student.user.name} ${student.user.surname}: ${affinity.level} (${affinity.score})`);
                     } else {
-                        affinity = {
-                            level: 'sin datos',
-                            score: 0,
-                            matches: 0,
-                            coverage: 0,
-                            explanation: 'No hay suficientes datos para calcular afinidad'
-                        };
+                        // 🔥 MODIFICADO: Nunca devolver "sin datos", usar score 0 que se convierte en "bajo"
+                        affinity = affinityCalculator.calculateAffinity({}, {}, {
+                            profamilyId: studentProfamilyId,
+                            offerProfamilyIds: offerProfamilyIds,
+                            academicVerificationStatus: academicVerificationStatus
+                        });
+                        console.log(`⚠️ Afinidad mínima para ${student.user.name} ${student.user.surname}: ${affinity.level} (${affinity.score}) - Datos insuficientes`);
                     }
 
                     candidates.push({
@@ -693,8 +693,7 @@ export const getCompanyOffersWithCandidates = async (req, res) => {
                     'muy alto': candidates.filter(c => c.affinity.level === 'muy alto').length,
                     'alto': candidates.filter(c => c.affinity.level === 'alto').length,
                     'medio': candidates.filter(c => c.affinity.level === 'medio').length,
-                    'bajo': candidates.filter(c => c.affinity.level === 'bajo').length,
-                    'sin datos': candidates.filter(c => c.affinity.level === 'sin datos').length
+                    'bajo': candidates.filter(c => c.affinity.level === 'bajo').length
                 }
             };
 
@@ -874,13 +873,13 @@ export const getApplicationsByOffer = async (req, res) => {
                     console.log(`❌ NO se puede calcular afinidad para ${student.user.name} ${student.user.surname}:`);
                     console.log(`   - Oferta tiene skills: ${Object.keys(offerSkills).length > 0}`);
                     console.log(`   - Estudiante tiene skills: ${Object.keys(studentSkills).length > 0}`);
-                    affinity = {
-                        level: 'sin datos',
-                        score: 0,
-                        matches: 0,
-                        coverage: 0,
-                        explanation: 'No hay suficientes datos para calcular afinidad'
-                    };
+                    // 🔥 MODIFICADO: Nunca devolver "sin datos", usar score 0 que se convierte en "bajo"
+                    affinity = affinityCalculator.calculateAffinity({}, {}, {
+                        profamilyId: studentProfamilyId,
+                        offerProfamilyIds: offerProfamilyIds,
+                        academicVerificationStatus: academicVerificationStatus
+                    });
+                    console.log(`⚠️ Afinidad mínima para ${student.user.name} ${student.user.surname}: ${affinity.level} (${affinity.score}) - Datos insuficientes`);
                 }
 
                 candidates.push({
@@ -1080,30 +1079,26 @@ async function getOffersWithAptitude(req, res) {
                     console.log(`🔍 DEBUG: offerSkills (${Object.keys(offerSkills).length}):`, offerSkills);
                     console.log(`🔍 DEBUG: studentSkills (${Object.keys(studentSkills).length}):`, studentSkills);
                     console.log(`🔍 DEBUG: profamily data:`, { profamilyId: studentProfamilyId, offerProfamilyIds: offerProfamilyIds });
-                    
+
                     aptitude = affinityCalculator.calculateAffinity(offerSkills, studentSkills, {
                         profamilyId: studentProfamilyId,
                         offerProfamilyIds: offerProfamilyIds,
                         academicVerificationStatus: academicVerificationStatus
                     });
-                    
+
                     console.log(`✅ DEBUG: Resultado afinidad para "${offer.name}":`, aptitude);
                 } else {
                     console.log(`❌ DEBUG: NO se puede calcular afinidad para "${offer.name}":`);
                     console.log(`   - offerSkills: ${Object.keys(offerSkills).length} skills`);
                     console.log(`   - studentSkills: ${Object.keys(studentSkills).length} skills`);
-                    aptitude = {
-                        level: 'sin datos',
-                        score: 0,
-                        matches: 0,
-                        coverage: 0,
-                        explanation: Object.keys(offerSkills).length === 0
-                            ? 'Esta oferta no tiene skills específicos definidos'
-                            : 'Necesitas agregar skills a tu perfil para ver tu compatibilidad'
-                    };
-                }
-
-                // Formatear para el frontend
+                    // 🔥 MODIFICADO: Nunca devolver "sin datos", usar score 0 que se convierte en "bajo"
+                    aptitude = affinityCalculator.calculateAffinity({}, {}, {
+                        profamilyId: studentProfamilyId,
+                        offerProfamilyIds: offerProfamilyIds,
+                        academicVerificationStatus: academicVerificationStatus
+                    });
+                    console.log(`⚠️ Afinidad mínima para "${offer.name}": ${aptitude.level} (${aptitude.score}) - Datos insuficientes`);
+                }                // Formatear para el frontend
                 const formattedOffer = {
                     id: offer.id,
                     name: offer.name,
