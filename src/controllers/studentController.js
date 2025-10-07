@@ -236,6 +236,9 @@ export const searchIntelligentStudents = async (req, res) => {
     console.log('   - offerId:', offerId);
     console.log('   - skills:', skills);
     console.log('   - filters:', filters);
+    console.log('   - filters.profamilyId:', filters.profamilyId);
+    console.log('   - filters.profamilyId tipo:', typeof filters.profamilyId);
+    console.log('   - filters.profamilyId valor parseado:', filters.profamilyId ? parseInt(filters.profamilyId) : 'NO EXISTE');
 
     // 🔥 MANEJAR AMBOS CASOS: offerId O skills
     if (!offerId && (!skills || skills.length === 0)) {
