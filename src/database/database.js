@@ -22,7 +22,15 @@ function parseDatabaseUrl(databaseUrl) {
 // Configuración para Railway (DATABASE_URL) o variables separadas
 let sequelizeConfig;
 
-if (process.env.DATABASE_URL) {
+if (process.env.DATABASE_URL?.startsWith('sqlite')) {
+    // SQLite para desarrollo rápido
+    console.log('🗄️ Using SQLite database');
+    sequelizeConfig = {
+        dialect: 'sqlite',
+        storage: ':memory:',
+        logging: process.env.NODE_ENV === 'development' ? console.log : false
+    };
+} else if (process.env.DATABASE_URL) {
     // Railway proporciona DATABASE_URL
     console.log('🔗 Using Railway DATABASE_URL configuration');
     const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL);

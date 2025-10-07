@@ -399,7 +399,7 @@ export const searchIntelligentStudents = async (req, res) => {
       whereClause.id = { [Op.notIn]: appliedStudentIds };
     }
     
-    if (filters.profamilyId) whereClause.profamilyId = filters.profamilyId;
+    if (filters.profamilyId) whereClause.profamilyId = parseInt(filters.profamilyId);
     if (filters.grade) whereClause.grade = filters.grade;
     if (filters.car !== undefined) whereClause.car = filters.car;
 
