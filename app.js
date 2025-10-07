@@ -79,14 +79,23 @@ async function initializeDatabase() {
 
         // 🚀 EJECUTAR SEED AUTOMÁTICO EN PRODUCCIÓN (Railway)
         if (process.env.NODE_ENV === 'production' && process.env.RAILWAY_ENVIRONMENT) {
-            console.log('🌱 Ejecutando seed automático en Railway...');
+            console.log('🌱 Verificando si es necesario ejecutar seed automático en Railway...');
+
             try {
-                const seedDatabase = (await import('./src/database/seed.js')).default;
-                // In production, don't force reset by default
-                const seedResult = await seedDatabase(false);
-                console.log('✅ Seed completado automáticamente:', seedResult.data);
+                // Verificar si ya existe data en la base de datos
+                const { User } = (await import('./src/models/users.js'));
+                const existingUsers = await User.count();
+
+                if (existingUsers === 0) {
+                    console.log('📝 Base de datos vacía, ejecutando seed automático...');
+                    const seedDatabase = (await import('./src/database/seed.js')).default;
+                    const seedResult = await seedDatabase(false);
+                    console.log('✅ Seed completado automáticamente:', seedResult.data);
+                } else {
+                    console.log(`ℹ️ Base de datos ya contiene ${existingUsers} usuarios, saltando seed automático`);
+                }
             } catch (seedError) {
-                console.error('❌ Error en seed automático:', seedError.message);
+                console.error('❌ Error en verificación/ejecución de seed automático:', seedError.message);
                 // No fallar la aplicación por error en seed, solo loggear
             }
         }

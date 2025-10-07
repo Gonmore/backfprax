@@ -16,10 +16,25 @@ import { Cv } from "../models/cv.js";
 import { CvSkill } from '../models/cvSkill.js';
 import { AcademicVerification } from "../models/academicVerification.js";
 import logger from '../logs/logger.js';
+import { encriptar } from '../common/bcrypt.js';
 
 async function seedDatabase(forceReset = false) {
 try {
         logger.info('🌱 Iniciando seed completo de producción...');
+
+        // Verificar si ya existe data (solo si no es force reset)
+        if (!forceReset) {
+            const { User } = (await import('../models/users.js'));
+            const existingUsers = await User.count();
+            if (existingUsers > 0) {
+                logger.info(`ℹ️ Base de datos ya contiene ${existingUsers} usuarios, seed cancelado para evitar duplicados`);
+                return {
+                    success: true,
+                    message: 'Seed cancelado - data ya existe',
+                    data: { skipped: true, existingUsers }
+                };
+            }
+        }
 
         // Sincronizar base de datos
         const syncOptions = forceReset ? { force: true } : { alter: true };
@@ -248,7 +263,9 @@ try {
 
         // 4. Crear Usuarios (al menos 3 de cada rol)
         logger.info('👥 Creando usuarios de producción...');
-        const users = await User.bulkCreate([
+
+        // Definir usuarios con contraseñas en texto plano
+        const rawUsers = [
             // Estudiantes (6 estudiantes)
             {
                 username: "estudiante1",
@@ -474,7 +491,17 @@ try {
                 active: true,
                 status: "active"
             }
-        ], { ignoreDuplicates: true });
+        ];
+
+        // Hashear contraseñas antes de bulkCreate
+        logger.info('🔐 Hasheando contraseñas de usuarios...');
+        const hashedUsers = await Promise.all(rawUsers.map(async (user) => ({
+            ...user,
+            password: await encriptar(user.password)
+        })));
+
+        // Crear usuarios con contraseñas hasheadas
+        const users = await User.bulkCreate(hashedUsers, { ignoreDuplicates: true });
 
         // Obtener todos los usuarios existentes
         const allUsers = await User.findAll();
