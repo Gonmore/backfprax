@@ -13,7 +13,8 @@ async function runSeed() {
     try {
         console.log('🚀 Ejecutando seed de base de datos local...\n');
 
-        const result = await seedDatabase();
+        // Force reset for local development to ensure clean state
+        const result = await seedDatabase(true);
 
         console.log('\n✅ Seed completado exitosamente!');
         console.log('📊 Resumen de datos creados:');

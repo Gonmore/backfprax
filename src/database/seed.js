@@ -14,13 +14,17 @@ import UserCompany from "../models/userCompany.js";
 import { UserScenter } from "../models/userScenter.js";
 import { Cv } from "../models/cv.js";
 import { CvSkill } from '../models/cvSkill.js';
+import { AcademicVerification } from "../models/academicVerification.js";
+import logger from '../logs/logger.js';
 
-async function seedDatabase() {
-    try {
+async function seedDatabase(forceReset = false) {
+try {
         logger.info('🌱 Iniciando seed completo de producción...');
 
         // Sincronizar base de datos
-        await sequelize.sync({ alter: true });
+        const syncOptions = forceReset ? { force: true } : { alter: true };
+        logger.info(`🔄 Sincronizando base de datos ${forceReset ? '(FORCE RESET)' : '(ALTER MODE)'}...`);
+        await sequelize.sync(syncOptions);
 
         // 1. Crear Skills por categorías
         logger.info('🛠️ Creando skills profesionales...');
@@ -124,6 +128,70 @@ async function seedDatabase() {
             {
                 name: "Fabricación Mecánica",
                 description: "Mecánica, soldadura, mantenimiento de vehículos"
+            },
+            {
+                name: "Edificación y Obra Civil",
+                description: "Construcción, albañilería, carpintería, fontanería, electricidad"
+            },
+            {
+                name: "Electricidad y Electrónica",
+                description: "Instalaciones eléctricas, electrónica industrial, domótica, telecomunicaciones"
+            },
+            {
+                name: "Energía y Agua",
+                description: "Energías renovables, mantenimiento de instalaciones térmicas, tratamiento de aguas"
+            },
+            {
+                name: "Transporte y Mantenimiento de Vehículos",
+                description: "Mecánica de automóviles, electromecánica, carrozado, pintura automotriz"
+            },
+            {
+                name: "Agraria",
+                description: "Jardinería, agricultura ecológica, ganadería, forestal"
+            },
+            {
+                name: "Marítimo-Pesquera",
+                description: "Navegación, pesca, acuicultura, mantenimiento de embarcaciones"
+            },
+            {
+                name: "Química",
+                description: "Laboratorio químico, procesos químicos industriales, control de calidad"
+            },
+            {
+                name: "Seguridad y Medio Ambiente",
+                description: "Prevención de riesgos laborales, emergencias, gestión medioambiental"
+            },
+            {
+                name: "Textil, Confección y Piel",
+                description: "Confección industrial, patronaje, diseño de moda, marroquinería"
+            },
+            {
+                name: "Vidrio y Cerámica",
+                description: "Fabricación de vidrio, cerámica, decoración cerámica"
+            },
+            {
+                name: "Madera, Mueble y Corcho",
+                description: "Carpintería, ebanistería, fabricación de muebles, restauración"
+            },
+            {
+                name: "Imagen y Sonido",
+                description: "Producción audiovisual, sonido, iluminación, fotografía"
+            },
+            {
+                name: "Imagen Personal",
+                description: "Peluquería, estética, cosmética, masaje, asesoría de imagen"
+            },
+            {
+                name: "Artes Gráficas",
+                description: "Diseño gráfico, impresión digital, preimpresión, encuadernación"
+            },
+            {
+                name: "Industrias Extractivas",
+                description: "Minería, cantería, perforaciones, tratamiento de minerales"
+            },
+            {
+                name: "Artes y Artesanías",
+                description: "Artes plásticas, artesanía tradicional, restauración artística"
             }
         ], { ignoreDuplicates: true });
 

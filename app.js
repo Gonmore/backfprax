@@ -69,8 +69,12 @@ function getLocalIP() {
 // 🚀 INICIALIZACIÓN DE LA BASE DE DATOS (SYNC)
 async function initializeDatabase() {
     try {
-        console.log('🔄 Sincronizando tablas automáticamente (alter: true para compatibilidad)...');
-        await sequelize.sync({ alter: true });
+        // Check if force reset is requested
+        const forceReset = process.env.FORCE_RESET_DB === 'true';
+        const syncOptions = forceReset ? { force: true } : { alter: true };
+
+        console.log(`🔄 Sincronizando tablas ${forceReset ? '(FORCE RESET - DROPPING ALL TABLES)' : 'automáticamente (alter: true para compatibilidad)'}...`);
+        await sequelize.sync(syncOptions);
         console.log('✅ Tablas sincronizadas correctamente');
 
         // 🚀 EJECUTAR SEED AUTOMÁTICO EN PRODUCCIÓN (Railway)
@@ -78,7 +82,8 @@ async function initializeDatabase() {
             console.log('🌱 Ejecutando seed automático en Railway...');
             try {
                 const seedDatabase = (await import('./src/database/seed.js')).default;
-                const seedResult = await seedDatabase();
+                // In production, don't force reset by default
+                const seedResult = await seedDatabase(false);
                 console.log('✅ Seed completado automáticamente:', seedResult.data);
             } catch (seedError) {
                 console.error('❌ Error en seed automático:', seedError.message);
