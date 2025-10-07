@@ -10,7 +10,7 @@ import { Application } from "../models/application.js";
 import { Skill } from "../models/skill.js";
 import { StudentSkill } from "../models/studentSkill.js";
 import { OfferSkill } from "../models/offerSkill.js";
-import { UserCompany } from "../models/userCompany.js";
+import UserCompany from "../models/userCompany.js";
 import { UserScenter } from "../models/userScenter.js";
 import { AcademicVerification } from "../models/academicVerification.js";
 import logger from '../logs/logger.js';
@@ -78,6 +78,10 @@ async function seedDatabase() {
             { name: "Italiano", category: "Idiomas" }
         ], { ignoreDuplicates: true });
 
+        // Obtener todos los skills existentes (incluyendo los que ya estaban)
+        const allSkills = await Skill.findAll();
+        logger.info(`📊 Skills totales en BD: ${allSkills.length}`);
+
         // 2. Crear Familias Profesionales completas
         logger.info('📚 Creando familias profesionales completas...');
         const profamilies = await Profamily.bulkCreate([
@@ -122,6 +126,9 @@ async function seedDatabase() {
                 description: "Mecánica, soldadura, mantenimiento de vehículos"
             }
         ], { ignoreDuplicates: true });
+
+        // Obtener todas las familias profesionales existentes
+        const allProfamilies = await Profamily.findAll();
 
         // 3. Crear Centros de Estudios
         logger.info('🏫 Creando centros de estudios...');
@@ -168,68 +175,10 @@ async function seedDatabase() {
             }
         ], { ignoreDuplicates: true });
 
-        // 4. Crear Empresas
-        logger.info('🏢 Creando empresas...');
-        const companies = await Company.bulkCreate([
-            {
-                name: "TechSolutions España",
-                code: "TECH001",
-                city: "Madrid",
-                address: "Calle Innovation 100",
-                phone: "911111111",
-                email: "rrhh@techsolutions.es",
-                web: "www.techsolutions.es",
-                sector: "Tecnología",
-                rrhh: "Maria García",
-                main: "Desarrollo de software",
-                description: "Empresa líder en desarrollo de aplicaciones web y móviles",
-                active: true
-            },
-            {
-                name: "Consultoría Empresarial BCN",
-                code: "CONS002",
-                city: "Barcelona",
-                address: "Rambla Negocio 200",
-                phone: "932222222",
-                email: "practicas@consultoriabcn.es",
-                web: "www.consultoriabcn.es",
-                sector: "Consultoría",
-                rrhh: "Pedro Martinez",
-                main: "Consultoría de gestión",
-                description: "Asesoramiento integral para empresas",
-                active: true
-            },
-            {
-                name: "HealthCare Valencia",
-                code: "HEAL003",
-                city: "Valencia",
-                address: "Avda. Salud 300",
-                phone: "963333333",
-                email: "recursos@healthcare.es",
-                web: "www.healthcare.es",
-                sector: "Sanidad",
-                rrhh: "Ana López",
-                main: "Servicios sanitarios",
-                description: "Centro de servicios de salud especializados",
-                active: true
-            },
-            {
-                name: "Marketing Digital Pro",
-                code: "MARK004",
-                city: "Sevilla",
-                address: "Calle Publicidad 400",
-                phone: "954444444",
-                email: "talento@marketingpro.es",
-                web: "www.marketingpro.es",
-                sector: "Marketing",
-                rrhh: "Carlos Ruiz",
-                main: "Marketing digital y publicidad",
-                description: "Agencia de marketing digital y comunicación",
-                active: true
-            }
-        ], { ignoreDuplicates: true });
+        // Obtener todos los centros existentes
+        const allScenters = await Scenter.findAll();
 
-        // 5. Crear Usuarios (al menos 3 de cada rol)
+        // 4. Crear Usuarios (al menos 3 de cada rol)
         logger.info('👥 Creando usuarios de producción...');
         const users = await User.bulkCreate([
             // Estudiantes (6 estudiantes)
@@ -459,29 +408,95 @@ async function seedDatabase() {
             }
         ], { ignoreDuplicates: true });
 
-        // 6. Crear relaciones Empresa-Usuario
+        // Obtener todos los usuarios existentes
+        const allUsers = await User.findAll();
+        const companies = await Company.bulkCreate([
+            {
+                name: "TechSolutions España",
+                code: "TECH001",
+                city: "Madrid",
+                address: "Calle Innovation 100",
+                phone: "911111111",
+                email: "rrhh@techsolutions.es",
+                web: "www.techsolutions.es",
+                sector: "Tecnología",
+                rrhh: "Maria García",
+                main: "Desarrollo de software",
+                description: "Empresa líder en desarrollo de aplicaciones web y móviles",
+                userId: allUsers.find(u => u.email === 'rrhh@techsolutions.es').id,
+                active: true
+            },
+            {
+                name: "Consultoría Empresarial BCN",
+                code: "CONS002",
+                city: "Barcelona",
+                address: "Rambla Negocio 200",
+                phone: "932222222",
+                email: "practicas@consultoriabcn.es",
+                web: "www.consultoriabcn.es",
+                sector: "Consultoría",
+                rrhh: "Pedro Martinez",
+                main: "Consultoría de gestión",
+                description: "Asesoramiento integral para empresas",
+                userId: allUsers.find(u => u.email === 'practicas@consultoriabcn.es').id,
+                active: true
+            },
+            {
+                name: "HealthCare Valencia",
+                code: "HEAL003",
+                city: "Valencia",
+                address: "Avda. Salud 300",
+                phone: "963333333",
+                email: "recursos@healthcare.es",
+                web: "www.healthcare.es",
+                sector: "Sanidad",
+                rrhh: "Ana López",
+                main: "Servicios sanitarios",
+                description: "Centro de servicios de salud especializados",
+                userId: allUsers.find(u => u.email === 'recursos@healthcare.es').id,
+                active: true
+            },
+            {
+                name: "Marketing Digital Pro",
+                code: "MARK004",
+                city: "Sevilla",
+                address: "Calle Publicidad 400",
+                phone: "954444444",
+                email: "talento@marketingpro.es",
+                web: "www.marketingpro.es",
+                sector: "Marketing",
+                rrhh: "Carlos Ruiz",
+                main: "Marketing digital y publicidad",
+                description: "Agencia de marketing digital y comunicación",
+                userId: allUsers.find(u => u.email === 'talento@marketingpro.es').id,
+                active: true
+            }
+        ], { ignoreDuplicates: true });
+
+        // Obtener todas las empresas existentes
+        const allCompanies = await Company.findAll();        // 6. Crear relaciones Empresa-Usuario
         logger.info('🔗 Creando relaciones empresa-usuario...');
         await UserCompany.bulkCreate([
-            { userId: 7, companyId: 1, isActive: true }, // empresa1 -> TechSolutions
-            { userId: 8, companyId: 2, isActive: true }, // empresa2 -> Consultoría BCN
-            { userId: 9, companyId: 3, isActive: true }, // empresa3 -> HealthCare
-            { userId: 10, companyId: 4, isActive: true } // empresa4 -> Marketing Pro
+            { userId: allUsers.find(u => u.email === 'rrhh@techsolutions.es').id, companyId: allCompanies.find(c => c.code === 'TECH001').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'practicas@consultoriabcn.es').id, companyId: allCompanies.find(c => c.code === 'CONS002').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'recursos@healthcare.es').id, companyId: allCompanies.find(c => c.code === 'HEAL003').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'talento@marketingpro.es').id, companyId: allCompanies.find(c => c.code === 'MARK004').id, isActive: true }
         ], { ignoreDuplicates: true });
 
         // 7. Crear relaciones Centro-Usuario
         logger.info('🔗 Creando relaciones centro-usuario...');
         await UserScenter.bulkCreate([
-            { userId: 11, scenterId: 1, isActive: true }, // centro1 -> IES Tecnológico Madrid
-            { userId: 12, scenterId: 2, isActive: true }, // centro2 -> Centro FP Barcelona
-            { userId: 13, scenterId: 3, isActive: true }, // centro3 -> Instituto Superior Valencia
-            { userId: 14, scenterId: 4, isActive: true }  // centro4 -> Centro Profesional Sevilla
+            { userId: allUsers.find(u => u.email === 'coordinador@iestecnologico.edu.es').id, scenterId: allScenters.find(s => s.code === 'IES001').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'director@fpavanzada.edu.es').id, scenterId: allScenters.find(s => s.code === 'CFP002').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'jefe@isuvalencia.edu.es').id, scenterId: allScenters.find(s => s.code === 'ISV003').id, isActive: true },
+            { userId: allUsers.find(u => u.email === 'coordinadora@cpsevilla.edu.es').id, scenterId: allScenters.find(s => s.code === 'CPS004').id, isActive: true }
         ], { ignoreDuplicates: true });
 
         // 8. Crear perfiles de estudiantes con profamilyId
         logger.info('🎓 Creando perfiles de estudiantes...');
         const students = await Student.bulkCreate([
             {
-                userId: 1,
+                userId: allUsers.find(u => u.email === 'juan.perez@test.com').id,
                 grade: "Grado Superior",
                 course: "Desarrollo de Aplicaciones Web",
                 double: false,
@@ -490,10 +505,10 @@ async function seedDatabase() {
                 tag: "Full Stack Developer",
                 description: "Especializado en React, Node.js y PostgreSQL",
                 disp: "2024-09-01",
-                profamilyId: 1 // Informática y Comunicaciones
+                profamilyId: allProfamilies.find(p => p.name === "Informática y Comunicaciones").id
             },
             {
-                userId: 2,
+                userId: allUsers.find(u => u.email === 'maria.gonzalez@test.com').id,
                 grade: "Grado Superior",
                 course: "Marketing y Publicidad",
                 double: false,
@@ -502,10 +517,10 @@ async function seedDatabase() {
                 tag: "Digital Marketing",
                 description: "Enfocado en redes sociales, SEO y Google Ads",
                 disp: "2024-10-15",
-                profamilyId: 3 // Comercio y Marketing
+                profamilyId: allProfamilies.find(p => p.name === "Comercio y Marketing").id
             },
             {
-                userId: 3,
+                userId: allUsers.find(u => u.email === 'carlos.ruiz@test.com').id,
                 grade: "Grado Superior",
                 course: "Administración y Finanzas",
                 double: true,
@@ -514,10 +529,10 @@ async function seedDatabase() {
                 tag: "Gestión Empresarial",
                 description: "Conocimientos en contabilidad, Excel y RRHH",
                 disp: "2024-11-01",
-                profamilyId: 2 // Administración y Gestión
+                profamilyId: allProfamilies.find(p => p.name === "Administración y Gestión").id
             },
             {
-                userId: 4,
+                userId: allUsers.find(u => u.email === 'ana.lopez@test.com').id,
                 grade: "Grado Medio",
                 course: "Auxiliar de Enfermería",
                 double: false,
@@ -526,10 +541,10 @@ async function seedDatabase() {
                 tag: "Sanidad",
                 description: "Formación en primeros auxilios y cuidados básicos",
                 disp: "2024-09-15",
-                profamilyId: 4 // Sanidad
+                profamilyId: allProfamilies.find(p => p.name === "Sanidad").id
             },
             {
-                userId: 5,
+                userId: allUsers.find(u => u.email === 'david.martin@test.com').id,
                 grade: "Grado Medio",
                 course: "Educación Infantil",
                 double: false,
@@ -538,10 +553,10 @@ async function seedDatabase() {
                 tag: "Educación",
                 description: "Especializado en pedagogía infantil y animación",
                 disp: "2024-10-01",
-                profamilyId: 5 // Servicios Socioculturales
+                profamilyId: allProfamilies.find(p => p.name === "Servicios Socioculturales y a la Comunidad").id
             },
             {
-                userId: 6,
+                userId: allUsers.find(u => u.email === 'laura.sanchez@test.com').id,
                 grade: "Grado Superior",
                 course: "Diseño Gráfico",
                 double: false,
@@ -550,45 +565,48 @@ async function seedDatabase() {
                 tag: "UI/UX Designer",
                 description: "Experiencia en Photoshop, Illustrator y Figma",
                 disp: "2024-11-15",
-                profamilyId: 1 // Informática y Comunicaciones
+                profamilyId: allProfamilies.find(p => p.name === "Informática y Comunicaciones").id
             }
         ], { ignoreDuplicates: true });
+
+        // Obtener todos los estudiantes existentes
+        const allStudents = await Student.findAll();
 
         // 9. Crear skills para estudiantes
         logger.info('🎯 Asignando skills a estudiantes...');
         await StudentSkill.bulkCreate([
             // Juan Pérez - Desarrollo Web
-            { studentId: 1, skillId: 1, proficiencyLevel: "advanced" }, // HTML/CSS
-            { studentId: 1, skillId: 2, proficiencyLevel: "advanced" }, // JavaScript
-            { studentId: 1, skillId: 3, proficiencyLevel: "intermediate" }, // React
-            { studentId: 1, skillId: 4, proficiencyLevel: "intermediate" }, // Node.js
-            { studentId: 1, skillId: 5, proficiencyLevel: "intermediate" }, // Express.js
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "HTML/CSS").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "JavaScript").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "React").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "Node.js").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "Express.js").id, proficiencyLevel: "intermediate" },
 
             // María González - Marketing Digital
-            { studentId: 2, skillId: 14, proficiencyLevel: "advanced" }, // Google Ads
-            { studentId: 2, skillId: 15, proficiencyLevel: "advanced" }, // Facebook Ads
-            { studentId: 2, skillId: 16, proficiencyLevel: "intermediate" }, // SEO/SEM
-            { studentId: 2, skillId: 17, proficiencyLevel: "intermediate" }, // Social Media Marketing
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Google Ads").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Facebook Ads").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "SEO/SEM").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Social Media Marketing").id, proficiencyLevel: "intermediate" },
 
             // Carlos Ruiz - Administración
-            { studentId: 3, skillId: 19, proficiencyLevel: "advanced" }, // Excel Avanzado
-            { studentId: 3, skillId: 20, proficiencyLevel: "intermediate" }, // Gestión de Proyectos
-            { studentId: 3, skillId: 21, proficiencyLevel: "intermediate" }, // Recursos Humanos
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Gestión de Proyectos").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Recursos Humanos").id, proficiencyLevel: "intermediate" },
 
             // Ana López - Sanidad
-            { studentId: 4, skillId: 22, proficiencyLevel: "intermediate" }, // Auxiliar de Enfermería
-            { studentId: 4, skillId: 26, proficiencyLevel: "advanced" }, // Primeros Auxilios
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id, skillId: allSkills.find(s => s.name === "Auxiliar de Enfermería").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id, skillId: allSkills.find(s => s.name === "Primeros Auxilios").id, proficiencyLevel: "advanced" },
 
             // David Martín - Educación
-            { studentId: 5, skillId: 27, proficiencyLevel: "advanced" }, // Educación Infantil
-            { studentId: 5, skillId: 28, proficiencyLevel: "intermediate" }, // Pedagogía
-            { studentId: 5, skillId: 30, proficiencyLevel: "intermediate" }, // Animación Sociocultural
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Educación Infantil").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Pedagogía").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Animación Sociocultural").id, proficiencyLevel: "intermediate" },
 
             // Laura Sánchez - Diseño
-            { studentId: 6, skillId: 7, proficiencyLevel: "advanced" }, // Adobe Photoshop
-            { studentId: 6, skillId: 8, proficiencyLevel: "advanced" }, // Adobe Illustrator
-            { studentId: 6, skillId: 9, proficiencyLevel: "intermediate" }, // Figma
-            { studentId: 6, skillId: 10, proficiencyLevel: "intermediate" } // UI/UX Design
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Adobe Photoshop").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Adobe Illustrator").id, proficiencyLevel: "advanced" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Figma").id, proficiencyLevel: "intermediate" },
+            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "UI/UX Design").id, proficiencyLevel: "intermediate" }
         ], { ignoreDuplicates: true });
 
         // 10. Crear Tutores
@@ -617,161 +635,198 @@ async function seedDatabase() {
             }
         ], { ignoreDuplicates: true });
 
+        // Obtener todos los tutores existentes
+        const allTutors = await Tutor.findAll();
+
         // 11. Crear Ofertas de Prácticas (2 por empresa)
         logger.info('💼 Creando ofertas de prácticas...');
         const offers = await Offer.bulkCreate([
             // TechSolutions España - 2 ofertas
             {
-                companyId: 1,
-                title: "Desarrollador Web Full Stack",
+                companyId: allCompanies.find(c => c.code === 'TECH001').id,
+                name: "Desarrollador Web Full Stack",
                 description: "Buscamos estudiante de DAW para desarrollar aplicaciones web modernas",
-                requirements: "Conocimientos de React, Node.js, PostgreSQL",
+                requisites: "Conocimientos de React, Node.js, PostgreSQL",
                 location: "Madrid",
-                workType: "presencial",
-                duration: 6,
-                startDate: "2024-10-01",
-                endDate: "2025-04-01",
-                active: true,
-                salary: 800
+                mode: "presencial",
+                type: "FP Dual",
+                period: "6 meses",
+                schedule: "Jornada completa",
+                min_hr: 800,
+                car: true,
+                sector: "Tecnología",
+                tag: "Desarrollo Web",
+                jobs: "Desarrollo de aplicaciones web, mantenimiento de sistemas",
+                active: true
             },
             {
-                companyId: 1,
-                title: "Desarrollador Frontend React",
+                companyId: allCompanies.find(c => c.code === 'TECH001').id,
+                name: "Desarrollador Frontend React",
                 description: "Proyecto de desarrollo de interfaz de usuario moderna",
-                requirements: "React, JavaScript, CSS avanzado",
+                requisites: "React, JavaScript, CSS avanzado",
                 location: "Madrid (híbrido)",
-                workType: "hibrido",
-                duration: 4,
-                startDate: "2024-11-01",
-                endDate: "2025-03-01",
-                active: true,
-                salary: 750
+                mode: "hibrido",
+                type: "FP Dual",
+                period: "4 meses",
+                schedule: "Jornada completa",
+                min_hr: 750,
+                car: false,
+                sector: "Tecnología",
+                tag: "Frontend Development",
+                jobs: "Desarrollo de interfaces de usuario, optimización UX/UI",
+                active: true
             },
 
             // Consultoría Empresarial BCN - 2 ofertas
             {
-                companyId: 2,
-                title: "Consultor Junior de Gestión",
+                companyId: allCompanies.find(c => c.code === 'CONS002').id,
+                name: "Consultor Junior de Gestión",
                 description: "Apoyo en proyectos de consultoría empresarial",
-                requirements: "Excel avanzado, PowerPoint, análisis de datos",
+                requisites: "Excel avanzado, PowerPoint, análisis de datos",
                 location: "Barcelona",
-                workType: "presencial",
-                duration: 6,
-                startDate: "2024-09-15",
-                endDate: "2025-03-15",
-                active: true,
-                salary: 900
+                mode: "presencial",
+                type: "FP Dual",
+                period: "6 meses",
+                schedule: "Jornada completa",
+                min_hr: 900,
+                car: false,
+                sector: "Consultoría",
+                tag: "Consultoría Empresarial",
+                jobs: "Análisis de datos, elaboración de informes, soporte administrativo",
+                active: true
             },
             {
-                companyId: 2,
-                title: "Analista de RRHH",
+                companyId: allCompanies.find(c => c.code === 'CONS002').id,
+                name: "Analista de RRHH",
                 description: "Gestión de procesos de selección y formación",
-                requirements: "Recursos Humanos, Excel, comunicación",
+                requisites: "Recursos Humanos, Excel, comunicación",
                 location: "Barcelona",
-                workType: "presencial",
-                duration: 8,
-                startDate: "2024-10-01",
-                endDate: "2025-06-01",
-                active: true,
-                salary: 850
+                mode: "presencial",
+                type: "FP Dual",
+                period: "8 meses",
+                schedule: "Jornada completa",
+                min_hr: 850,
+                car: false,
+                sector: "Consultoría",
+                tag: "Recursos Humanos",
+                jobs: "Selección de personal, formación, gestión administrativa",
+                active: true
             },
 
             // HealthCare Valencia - 2 ofertas
             {
-                companyId: 3,
-                title: "Auxiliar de Enfermería",
+                companyId: allCompanies.find(c => c.code === 'HEAL003').id,
+                name: "Auxiliar de Enfermería",
                 description: "Apoyo en consultas médicas y cuidados básicos",
-                requirements: "Curso auxiliar de enfermería, primeros auxilios",
+                requisites: "Curso auxiliar de enfermería, primeros auxilios",
                 location: "Valencia",
-                workType: "presencial",
-                duration: 6,
-                startDate: "2024-09-01",
-                endDate: "2025-03-01",
-                active: true,
-                salary: 950
+                mode: "presencial",
+                type: "FP Dual",
+                period: "6 meses",
+                schedule: "Jornada completa",
+                min_hr: 950,
+                car: false,
+                sector: "Sanidad",
+                tag: "Sanidad",
+                jobs: "Atención al paciente, apoyo en consultas, cuidados básicos",
+                active: true
             },
             {
-                companyId: 3,
-                title: "Recepcionista Administrativo",
+                companyId: allCompanies.find(c => c.code === 'HEAL003').id,
+                name: "Recepcionista Administrativo",
                 description: "Gestión de citas y administración sanitaria",
-                requirements: "Administración, atención al cliente, informática básica",
+                requisites: "Administración, atención al cliente, informática básica",
                 location: "Valencia",
-                workType: "presencial",
-                duration: 4,
-                startDate: "2024-11-01",
-                endDate: "2025-03-01",
-                active: true,
-                salary: 700
+                mode: "presencial",
+                type: "FP Dual",
+                period: "4 meses",
+                schedule: "Media jornada",
+                min_hr: 700,
+                car: false,
+                sector: "Sanidad",
+                tag: "Administración Sanitaria",
+                jobs: "Gestión de citas, atención telefónica, archivo administrativo",
+                active: true
             },
 
             // Marketing Digital Pro - 2 ofertas
             {
-                companyId: 4,
-                title: "Community Manager",
+                companyId: allCompanies.find(c => c.code === 'MARK004').id,
+                name: "Community Manager",
                 description: "Gestión de redes sociales y contenido digital",
-                requirements: "Redes sociales, diseño gráfico, copywriting",
+                requisites: "Redes sociales, diseño gráfico, copywriting",
                 location: "Sevilla (remoto)",
-                workType: "remoto",
-                duration: 6,
-                startDate: "2024-10-15",
-                endDate: "2025-04-15",
-                active: true,
-                salary: 750
+                mode: "remoto",
+                type: "FP Dual",
+                period: "6 meses",
+                schedule: "Jornada completa",
+                min_hr: 750,
+                car: false,
+                sector: "Marketing",
+                tag: "Social Media",
+                jobs: "Gestión de redes sociales, creación de contenido, análisis de métricas",
+                active: true
             },
             {
-                companyId: 4,
-                title: "Especialista en Google Ads",
+                companyId: allCompanies.find(c => c.code === 'MARK004').id,
+                name: "Especialista en Google Ads",
                 description: "Gestión de campañas publicitarias en Google",
-                requirements: "Google Ads, Google Analytics, marketing digital",
+                requisites: "Google Ads, Google Analytics, marketing digital",
                 location: "Sevilla",
-                workType: "hibrido",
-                duration: 5,
-                startDate: "2024-09-20",
-                endDate: "2025-02-20",
-                active: true,
-                salary: 800
+                mode: "hibrido",
+                type: "FP Dual",
+                period: "5 meses",
+                schedule: "Jornada completa",
+                min_hr: 800,
+                car: false,
+                sector: "Marketing",
+                tag: "Google Ads",
+                jobs: "Gestión de campañas PPC, optimización de conversiones, reporting",
+                active: true
             }
         ], { ignoreDuplicates: true });
+
+        // Obtener todas las ofertas existentes
+        const allOffers = await Offer.findAll();
 
         // 12. Asignar skills a las ofertas
         logger.info('🔗 Asignando skills a ofertas...');
         await OfferSkill.bulkCreate([
-            // Oferta 1 - Desarrollador Web Full Stack
-            { offerId: 1, skillId: 1, requiredLevel: "intermediate" }, // HTML/CSS
-            { offerId: 1, skillId: 2, requiredLevel: "intermediate" }, // JavaScript
-            { offerId: 1, skillId: 3, requiredLevel: "basic" }, // React
-            { offerId: 1, skillId: 4, requiredLevel: "basic" }, // Node.js
+            { offerId: allOffers[0].id, skillId: allSkills.find(s => s.name === "HTML/CSS").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[0].id, skillId: allSkills.find(s => s.name === "JavaScript").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[0].id, skillId: allSkills.find(s => s.name === "React").id, requiredLevel: "beginner" },
+            { offerId: allOffers[0].id, skillId: allSkills.find(s => s.name === "Node.js").id, requiredLevel: "beginner" },
 
             // Oferta 2 - Desarrollador Frontend React
-            { offerId: 2, skillId: 1, requiredLevel: "advanced" }, // HTML/CSS
-            { offerId: 2, skillId: 2, requiredLevel: "advanced" }, // JavaScript
-            { offerId: 2, skillId: 3, requiredLevel: "intermediate" }, // React
+            { offerId: allOffers[1].id, skillId: allSkills.find(s => s.name === "HTML/CSS").id, requiredLevel: "advanced" },
+            { offerId: allOffers[1].id, skillId: allSkills.find(s => s.name === "JavaScript").id, requiredLevel: "advanced" },
+            { offerId: allOffers[1].id, skillId: allSkills.find(s => s.name === "React").id, requiredLevel: "intermediate" },
 
             // Oferta 3 - Consultor Junior
-            { offerId: 3, skillId: 19, requiredLevel: "advanced" }, // Excel Avanzado
-            { offerId: 3, skillId: 20, requiredLevel: "basic" }, // Gestión de Proyectos
+            { offerId: allOffers[2].id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, requiredLevel: "advanced" },
+            { offerId: allOffers[2].id, skillId: allSkills.find(s => s.name === "Gestión de Proyectos").id, requiredLevel: "beginner" },
 
             // Oferta 4 - Analista RRHH
-            { offerId: 4, skillId: 21, requiredLevel: "intermediate" }, // Recursos Humanos
-            { offerId: 4, skillId: 19, requiredLevel: "intermediate" }, // Excel
+            { offerId: allOffers[3].id, skillId: allSkills.find(s => s.name === "Recursos Humanos").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[3].id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, requiredLevel: "intermediate" },
 
             // Oferta 5 - Auxiliar de Enfermería
-            { offerId: 5, skillId: 22, requiredLevel: "intermediate" }, // Auxiliar de Enfermería
-            { offerId: 5, skillId: 26, requiredLevel: "basic" }, // Primeros Auxilios
+            { offerId: allOffers[4].id, skillId: allSkills.find(s => s.name === "Auxiliar de Enfermería").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[4].id, skillId: allSkills.find(s => s.name === "Primeros Auxilios").id, requiredLevel: "beginner" },
 
             // Oferta 6 - Recepcionista Administrativo
-            { offerId: 6, skillId: 18, requiredLevel: "basic" }, // Contabilidad
-            { offerId: 6, skillId: 19, requiredLevel: "basic" }, // Excel
+            { offerId: allOffers[5].id, skillId: allSkills.find(s => s.name === "Contabilidad").id, requiredLevel: "beginner" },
+            { offerId: allOffers[5].id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, requiredLevel: "beginner" },
 
             // Oferta 7 - Community Manager
-            { offerId: 7, skillId: 17, requiredLevel: "intermediate" }, // Social Media Marketing
-            { offerId: 7, skillId: 7, requiredLevel: "basic" }, // Adobe Photoshop
-            { offerId: 7, skillId: 8, requiredLevel: "basic" }, // Adobe Illustrator
+            { offerId: allOffers[6].id, skillId: allSkills.find(s => s.name === "Social Media Marketing").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[6].id, skillId: allSkills.find(s => s.name === "Adobe Photoshop").id, requiredLevel: "beginner" },
+            { offerId: allOffers[6].id, skillId: allSkills.find(s => s.name === "Adobe Illustrator").id, requiredLevel: "beginner" },
 
             // Oferta 8 - Especialista Google Ads
-            { offerId: 8, skillId: 14, requiredLevel: "advanced" }, // Google Ads
-            { offerId: 8, skillId: 18, requiredLevel: "intermediate" }, // Google Analytics
-            { offerId: 8, skillId: 16, requiredLevel: "intermediate" } // SEO/SEM
+            { offerId: allOffers[7].id, skillId: allSkills.find(s => s.name === "Google Ads").id, requiredLevel: "advanced" },
+            { offerId: allOffers[7].id, skillId: allSkills.find(s => s.name === "Google Analytics").id, requiredLevel: "intermediate" },
+            { offerId: allOffers[7].id, skillId: allSkills.find(s => s.name === "SEO/SEM").id, requiredLevel: "intermediate" }
         ], { ignoreDuplicates: true });
 
         // 13. Crear verificaciones académicas (algunos estudiantes verificados, otros no)
@@ -779,66 +834,84 @@ async function seedDatabase() {
         await AcademicVerification.bulkCreate([
             // Estudiantes verificados
             {
-                studentId: 1,
-                scenterId: 1, // IES Tecnológico Madrid
-                tutorId: "TUT001",
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id,
+                scenterId: allScenters.find(s => s.code === 'IES001').id,
+                tutorId: allTutors.find(t => t.id === "TUT001").id,
+                academicData: {
+                    scenter: allScenters.find(s => s.code === 'IES001').id,
+                    profamily: allProfamilies.find(p => p.name === "Informática y Comunicaciones").id,
+                    status: "approved",
+                    additionalInfo: "Estudiante destacado en desarrollo web"
+                },
                 course: "Desarrollo de Aplicaciones Web",
                 grade: "Grado Superior",
                 academicYear: "2023-2024",
-                status: "verified",
+                status: "approved",
                 verifiedAt: new Date(),
                 comments: "Estudiante destacado en desarrollo web"
             },
             {
-                studentId: 2,
-                scenterId: 2, // Centro FP Barcelona
-                tutorId: "TUT002",
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id,
+                scenterId: allScenters.find(s => s.code === 'CFP002').id,
+                tutorId: allTutors.find(t => t.id === "TUT002").id,
+                academicData: {
+                    scenter: allScenters.find(s => s.code === 'CFP002').id,
+                    profamily: allProfamilies.find(p => p.name === "Comercio y Marketing").id,
+                    status: "approved",
+                    additionalInfo: "Excelente rendimiento en prácticas de marketing"
+                },
                 course: "Marketing y Publicidad",
                 grade: "Grado Superior",
                 academicYear: "2023-2024",
-                status: "verified",
+                status: "approved",
                 verifiedAt: new Date(),
                 comments: "Excelente rendimiento en prácticas de marketing"
             },
             {
-                studentId: 4,
-                scenterId: 3, // Instituto Superior Valencia
-                tutorId: "TUT003",
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id,
+                scenterId: allScenters.find(s => s.code === 'ISV003').id,
+                tutorId: allTutors.find(t => t.id === "TUT003").id,
+                academicData: {
+                    scenter: allScenters.find(s => s.code === 'ISV003').id,
+                    profamily: allProfamilies.find(p => p.name === "Sanidad").id,
+                    status: "approved",
+                    additionalInfo: "Muy buena disposición para el trabajo en sanidad"
+                },
                 course: "Auxiliar de Enfermería",
                 grade: "Grado Medio",
                 academicYear: "2023-2024",
-                status: "verified",
+                status: "approved",
                 verifiedAt: new Date(),
                 comments: "Muy buena disposición para el trabajo en sanidad"
             },
             // Estudiantes NO verificados (sin verificación académica)
-            // Carlos Ruiz (id: 3), David Martín (id: 5), Laura Sánchez (id: 6) no tienen verificación
+            // Carlos Ruiz (estudiante3), David Martín (estudiante5), Laura Sánchez (estudiante6) no tienen verificación
         ], { ignoreDuplicates: true });
 
         logger.info('✅ Seed de producción completado exitosamente!');
         logger.info(`📊 Datos creados:
-        - ${skills.length} skills profesionales
-        - ${profamilies.length} familias profesionales
-        - ${scenters.length} centros de estudios
-        - ${companies.length} empresas
-        - ${users.length} usuarios (${users.filter(u => u.role === 'student').length} estudiantes, ${users.filter(u => u.role === 'company').length} empresas, ${users.filter(u => u.role === 'scenter').length} centros, ${users.filter(u => u.role === 'tutor').length} tutores, ${users.filter(u => u.role === 'admin').length} admin)
-        - ${students.length} perfiles de estudiantes
-        - ${tutors.length} tutores
-        - ${offers.length} ofertas de prácticas
-        - ${offers.length * 2} relaciones skill-oferta (aprox)
-        - ${students.filter((_, i) => [0, 1, 3].includes(i)).length} estudiantes con verificación académica`);
+        - ${allSkills.length} skills profesionales
+        - ${allProfamilies.length} familias profesionales
+        - ${allScenters.length} centros de estudios
+        - ${allCompanies.length} empresas
+        - ${allUsers.length} usuarios (${allUsers.filter(u => u.role === 'student').length} estudiantes, ${allUsers.filter(u => u.role === 'company').length} empresas, ${allUsers.filter(u => u.role === 'scenter').length} centros, ${allUsers.filter(u => u.role === 'tutor').length} tutores, ${allUsers.filter(u => u.role === 'admin').length} admin)
+        - ${allStudents.length} perfiles de estudiantes
+        - ${allTutors.length} tutores
+        - ${allOffers.length} ofertas de prácticas
+        - ${allOffers.length * 2} relaciones skill-oferta (aprox)
+        - ${allStudents.filter((_, i) => [0, 1, 3].includes(i)).length} estudiantes con verificación académica`);
 
         return {
             success: true,
             data: {
-                skills: skills.length,
-                profamilies: profamilies.length,
-                scenters: scenters.length,
-                companies: companies.length,
-                users: users.length,
-                students: students.length,
-                tutors: tutors.length,
-                offers: offers.length,
+                skills: allSkills.length,
+                profamilies: allProfamilies.length,
+                scenters: allScenters.length,
+                companies: allCompanies.length,
+                users: allUsers.length,
+                students: allStudents.length,
+                tutors: allTutors.length,
+                offers: allOffers.length,
                 academicVerifications: 3 // estudiantes verificados
             }
         };
