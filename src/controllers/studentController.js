@@ -257,6 +257,7 @@ export const searchIntelligentStudents = async (req, res) => {
 
     let companySkillsObject = {};
     let offerInfo = null;
+    let offer = null; // 🔥 DECLARAR AQUÍ PARA QUE ESTÉ DISPONIBLE EN TODO EL SCOPE
 
     if (offerId) {
       // 🔥 CASO 1: Búsqueda por oferta específica
@@ -264,7 +265,7 @@ export const searchIntelligentStudents = async (req, res) => {
 
       console.log('🔍 Buscando oferta con ID:', offerId);
       try {
-        const offer = await Offer.findByPk(offerId, {
+        offer = await Offer.findByPk(offerId, {
           include: [{
             model: Skill,
             as: 'skills',
