@@ -108,6 +108,9 @@ app.use(cors({
     const isLocalNetwork = /^https?:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(origin);
     if (isLocalNetwork) return callback(null, true);
 
+    // Permitir el dominio de producción del frontend
+    if (origin === 'https://frontfprax-production.up.railway.app') return callback(null, true);
+
     // En producción, podrías querer ser más restrictivo
     if (process.env.NODE_ENV === 'production') {
       return callback(new Error('Not allowed by CORS'));
