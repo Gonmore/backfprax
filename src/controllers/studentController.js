@@ -304,10 +304,23 @@ export const searchIntelligentStudents = async (req, res) => {
       console.log('📋 MODO: Búsqueda por skills generales');
       console.log('🔍 Skills recibidas:', skills);
       
-      skills.forEach(skill => {
-        const normalizedSkill = skill.toLowerCase().trim();
-        companySkillsObject[normalizedSkill] = 2; // nivel requerido (intermediate)
-      });
+      // 🔥 MANEJAR SKILLS COMO OBJETO O ARRAY
+      if (Array.isArray(skills)) {
+        // Si es array (formato original esperado)
+        skills.forEach(skill => {
+          const normalizedSkill = skill.toLowerCase().trim();
+          companySkillsObject[normalizedSkill] = 2; // nivel requerido (intermediate)
+        });
+      } else if (typeof skills === 'object' && skills !== null) {
+        // Si es objeto (formato actual del frontend: { 'skill name': level })
+        Object.entries(skills).forEach(([skillName, level]) => {
+          const normalizedSkill = skillName.toLowerCase().trim();
+          const skillLevel = typeof level === 'number' ? level : 2; // usar el nivel del objeto o default 2
+          companySkillsObject[normalizedSkill] = skillLevel;
+        });
+      } else {
+        console.log('⚠️ Skills en formato no reconocido, usando skills vacías');
+      }
 
       offerInfo = {
         id: null,
