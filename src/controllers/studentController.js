@@ -413,6 +413,7 @@ export const searchIntelligentStudents = async (req, res) => {
 
     // Obtener estudiantes
     console.log('🔍 Buscando estudiantes candidatos...');
+    console.error('🚨🚨🚨 DEBUG BACKEND: About to query students with whereClause:', JSON.stringify(whereClause));
     let students = [];
     try {
       students = await Student.findAll({
@@ -422,6 +423,16 @@ export const searchIntelligentStudents = async (req, res) => {
       });
 
       console.log(`📋 Estudiantes candidatos encontrados: ${students.length}`);
+      console.error(`🚨🚨🚨 DEBUG BACKEND: Found ${students.length} students AFTER excluding ${appliedStudentIds.length} who already applied`);
+      
+      if (students.length === 0) {
+        console.error('⚠️⚠️⚠️ NO STUDENTS FOUND! Possible reasons:');
+        console.error('   - All students already applied to this offer');
+        console.error('   - No active students in database');
+        console.error('   - Filters too restrictive');
+        console.error(`   - Excluded students: ${appliedStudentIds.length}`);
+        console.error(`   - Where clause: ${JSON.stringify(whereClause)}`);
+      }
     } catch (studentsError) {
       console.error('❌ ERROR BUSCANDO ESTUDIANTES:', studentsError);
       throw studentsError;
