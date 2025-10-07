@@ -31,7 +31,7 @@
 
     const { profamilyId = null, offerProfamilyIds = [], academicVerificationStatus = 'unverified' } = options;
 
-    // 🔥 NUEVO: Calcular afinidad de familia profesional PRIMERO (tiene más peso)
+    // 🔥 NUEVO: Calcular afinidad de familia profesional PRIMERO (ahora es BONUS, no base)
     const profamilyAffinity = this._calculateProfamilyAffinity(profamilyId, offerProfamilyIds, academicVerificationStatus);
 
     let score = 0;
@@ -51,27 +51,18 @@
     const totalStudentSkills = Object.keys(studentSkills).length;
 
     if (totalCompanySkills === 0) {
-      // 🔥 NUEVO: Si no hay skills requeridos, el score base depende solo de profamily
-      const baseScore = profamilyAffinity.score * 5; // Score base de 5 si coincide profamily
+      // 🔥 NUEVO: Si no hay skills requeridos, score basado solo en profamily (muy bajo)
+      const baseScore = profamilyAffinity.score * 2; // Score máximo 3.2 si profamily verificado
       return this._createAffinityResult(baseScore, 0, 0, [], { profamilyAffinity });
     }
 
-    // 🔥 NUEVO: El score base ahora depende principalmente de la coincidencia de profamily
-    let baseScore = 0;
-
-    // Si hay coincidencia de profamily, score base alto
-    if (profamilyAffinity.level === "exact_match") {
-      baseScore = 7.0; // Score base alto por coincidencia de profamily
-    } else if (profamilyAffinity.level === "related_match") {
-      baseScore = 5.0; // Score base medio por profamily relacionada
-    } else {
-      baseScore = 2.0; // Score base bajo sin coincidencia de profamily
-    }
+    // 🔥 NUEVO ALGORITMO: SKILLS SON EL FACTOR PRINCIPAL (70-80% del score)
+    // La profamily es ahora un BONUS adicional (20-30% del score)
 
     //  OPTIMIZACIÓN: Pre-clasificar habilidades por importancia
     const skillsByImportance = this._classifySkillsByImportance(companySkills);
 
-    //  OPTIMIZACIÓN: Calcular coincidencias con algoritmo mejorado
+    // 🔥 CALCULAR SCORE PRINCIPAL BASADO EN SKILLS
     for (const [skill, companyLevel] of Object.entries(companySkills)) {
       if (studentSkills[skill]) {
         const studentLevel = studentSkills[skill];
@@ -88,111 +79,110 @@
 
         matchingSkills.push(skillMatch);
 
-        //  OPTIMIZACIÓN: Sistema de puntuación más sofisticado
+        // 🔥 NUEVO: Sistema de puntuación más sofisticado y PESADO para skills
         let skillScore = this._calculateSkillScore(skillMatch);
 
-        // Aplicar bonificaciones especiales
+        // Aplicar bonificaciones especiales (más agresivas)
         if (companyLevel >= 4) {
           hasPremiumMatch = true;
           criticalSkillsMatched++;
-          skillScore *= this.weights.criticalSkill;
+          skillScore *= this.weights.criticalSkill; // 1.5x
         }
 
         if (companyLevel === 2) hasValue2Match++;
 
         if (studentLevel > companyLevel) {
           hasSuperiorRating++;
-          skillScore *= this.weights.superiorMatch;
+          skillScore *= this.weights.superiorMatch; // 1.3x
         }
 
-        //  OPTIMIZACIÓN: Bonus por consistencia en habilidades importantes
+        // 🔥 NUEVO: Bonus por consistencia en habilidades importantes (más agresivo)
         if (companyLevel >= 3 && studentLevel >= companyLevel) {
-          consistencyScore += 1;
+          consistencyScore += 2; // Duplicado
         }
 
         score += skillScore;
       } else {
-        //  OPTIMIZACIÓN: Penalización más inteligente para habilidades faltantes
+        // 🔥 NUEVO: Penalización más agresiva para habilidades faltantes
         const missingPenalty = this._calculateMissingSkillPenalty(companyLevel, totalCompanySkills);
-        score -= missingPenalty;
+        score -= missingPenalty * 1.5; // Penalización 50% más agresiva
       }
     }
 
-    //  OPTIMIZACIÓN: Factores mejorados de cobertura y proporcionalidad
+    // 🔥 NUEVO: Factor de cobertura más importante
     coverageFactor = matches / totalCompanySkills;
 
-    // Factor proporcional mejorado
+    // Factor proporcional mejorado (más agresivo)
     if (totalStudentSkills > totalCompanySkills) {
       const skillRatio = totalStudentSkills / totalCompanySkills;
-      proportionalFactor = Math.min(1.3, 1 + (coverageFactor * 0.3));
+      proportionalFactor = Math.min(1.4, 1 + (coverageFactor * 0.4)); // Máximo 1.4x
     }
 
-    //  OPTIMIZACIÓN: Detección mejorada de coincidencia única especial
+    // 🔥 NUEVO: Detección mejorada de coincidencia única especial (más agresiva)
     if (matches === 1 && totalCompanySkills === 1) {
       const singleSkill = matchingSkills[0];
       if (singleSkill.companyLevel >= 4 && singleSkill.studentLevel >= singleSkill.companyLevel) {
         specialUniqueMatch = true;
-        score = Math.min(score * 1.8, this.maxScoreUniqueMatch);
+        score = Math.min(score * 2.0, this.maxScoreUniqueMatch * 1.5); // Hasta 4.5
       }
     }
 
-    // 🔥 NUEVO: Combinar score de profamily con score de skills
-    // La coincidencia de profamily DOMINA completamente el score
+    // 🔥 NUEVO ALGORITMO DE COMBINACIÓN: SKILLS PRIMERO, PROFAMILY COMO BONUS
     let finalScore;
 
-    if (profamilyAffinity.level === "exact_match") {
-      // 🔥 PROFAMILY EXACTA: Score MUY ALTO independientemente de skills
-      // Dar score alto por profamily + bonus por skills coincidentes
-      // 🔥 CORRECCIÓN: Multiplicar por el score de verificación (1.6 para verificado, 1.3 para no verificado)
-      const profamilyBaseScore = 5.0; // Score base = 5.0
-      const verificationMultiplier = profamilyAffinity.score; // 1.6 para verificado, 1.3 para no verificado
-      const profamilyScore = profamilyBaseScore * verificationMultiplier; // 8.0 para verificado, 6.5 para no verificado
-      const skillBonus = Math.min(score * 0.2, 1.0); // Bonus pequeño por skills (máximo 1.0)
-      finalScore = profamilyScore + skillBonus;
-    } else if (profamilyAffinity.level === "related_match") {
-      // PROFAMILY RELACIONADA: Score medio-alto
-      finalScore = Math.max(6.0, baseScore + (score > 0 ? Math.min(score * 0.15, 0.8) : 0));
-    } else {
-      // SIN PROFAMILY: Score MUY BAJO basado en skills, pero penalizado fuertemente
-      finalScore = Math.min(score * 0.3, 2.0); // Máximo 2.0 sin profamily
-      finalScore *= coverageFactor * proportionalFactor;
-    }
+    // Calcular score base de skills (70-80% del score total)
+    let skillBaseScore = score * proportionalFactor;
 
-    // Bonificaciones progresivas (reducidas porque profamily ya da score base alto)
+    // Aplicar bonificaciones de skills
     if (hasPremiumMatch && criticalSkillsMatched >= 2) {
-      finalScore *= 1.1; // Reducido de criticalSkill
+      skillBaseScore *= 1.15; // Reducido pero aún significativo
     } else if (hasPremiumMatch) {
-      finalScore *= 1.05; // Reducido de experienceBonus
+      skillBaseScore *= 1.08;
     }
 
-    if (hasValue2Match >= 2) finalScore *= 1.02;
-    if (hasSuperiorRating >= 2) finalScore *= 1.05;
+    if (hasValue2Match >= 2) skillBaseScore *= 1.03;
+    if (hasSuperiorRating >= 2) skillBaseScore *= 1.08;
 
-    //  OPTIMIZACIÓN: Bonus por consistencia en múltiples habilidades
-    if (consistencyScore >= 3) {
-      finalScore *= 1.05;
+    // Bonus por consistencia
+    if (consistencyScore >= 4) { // Umbral más bajo
+      skillBaseScore *= 1.08;
     }
 
-    //  OPTIMIZACIÓN: Bonus por alta cobertura
+    // Bonus por alta cobertura
     if (coverageFactor >= 0.8) {
-      finalScore *= 1.1;
+      skillBaseScore *= 1.12;
     }
 
-    // 🔥 NUEVO: No aplicar profamily bonus aquí porque ya está incluido en baseScore
-    // finalScore *= profamilyAffinity.score; // REMOVIDO
-
-    //  OPTIMIZACIÓN: Normalización mejorada con curva logarítmica
-    // 🔥 NUEVO: Si hay profamily exact_match, no normalizar tanto
-    let normalizedScore;
+    // 🔥 PROFAMILY AHORA ES BONUS (20-30% del score total)
+    let profamilyBonus = 0;
     if (profamilyAffinity.level === "exact_match") {
-      // Para profamily exacta, mantener score alto con normalización mínima
-      normalizedScore = Math.min(10, finalScore * 0.9); // Mínima reducción
+      // Profamily exacta: bonus significativo pero no dominante
+      profamilyBonus = profamilyAffinity.score * 1.5; // 2.4 para verificado, 1.95 para no verificado
+    } else if (profamilyAffinity.level === "related_match") {
+      // Profamily relacionada: bonus moderado
+      profamilyBonus = profamilyAffinity.score * 1.0; // 1.6 para verificado, 1.3 para no verificado
+    }
+    // Si no hay coincidencia de profamily, bonus = 0
+
+    // 🔥 COMBINAR: 75% skills + 25% profamily bonus
+    finalScore = (skillBaseScore * 0.75) + (profamilyBonus * 0.25);
+
+    // 🔥 NUEVO: Asegurar que el score mínimo sea razonable si hay alguna coincidencia
+    if (matches > 0 && finalScore < 1.0) {
+      finalScore = Math.max(finalScore, 1.0 + (matches * 0.2));
+    }
+
+    // 🔥 NUEVO: Normalización más inteligente
+    let normalizedScore;
+    if (coverageFactor >= 0.9 && matches >= totalCompanySkills * 0.8) {
+      // Cobertura casi perfecta: mantener score alto
+      normalizedScore = Math.min(10, finalScore * 0.95);
     } else {
-      // Normalización estándar para otros casos
+      // Normalización estándar
       normalizedScore = this._normalizeScore(finalScore, totalCompanySkills, coverageFactor);
     }
 
-    //  INTEGRACIÓN: Factores expandidos con profamily
+    // 🔥 INTEGRACIÓN: Factores expandidos
     const factors = {
       hasPremiumMatch,
       hasValue2Match,
@@ -205,7 +195,10 @@
       skillDiversityBonus: totalStudentSkills > totalCompanySkills,
       perfectMatch: matches === totalCompanySkills && hasSuperiorRating === 0,
       profamilyAffinity,
-      baseScoreFromProfamily: baseScore
+      skillBaseScore: Math.round(skillBaseScore * 100) / 100,
+      profamilyBonus: Math.round(profamilyBonus * 100) / 100,
+      skillWeight: 0.75,
+      profamilyWeight: 0.25
     };
 
     const result = this._createAffinityResult(

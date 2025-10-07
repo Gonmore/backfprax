@@ -486,51 +486,101 @@ export const searchIntelligentStudents = async (req, res) => {
         
         if (!user) continue;
 
-        // 🔥 OBTENER SKILLS REALES DEL ESTUDIANTE DESDE StudentSkill
+        // 🔥 OBTENER SKILLS REALES DEL ESTUDIANTE DESDE CvSkill Y INFORMACIÓN ACADÉMICA
         const studentSkills = {};
+        let studentProfamilyId = null;
+        let studentScenterId = null;
+        let academicVerificationStatus = 'unverified';
+
         try {
-          const studentSkillRecords = await StudentSkill.findAll({
+          // 🔥 OBTENER CV DEL ESTUDIANTE
+          const studentCV = await Cv.findOne({
             where: { studentId: student.id },
-            include: [{
-              model: Skill,
-              as: 'skill',
-              attributes: ['name']
-            }],
-            raw: true
+            include: [
+              {
+                model: Skill,
+                as: 'skills',
+                through: {
+                  attributes: ['proficiencyLevel', 'yearsOfExperience', 'isHighlighted', 'notes', 'addedAt']
+                },
+                required: false
+              }
+            ],
+            attributes: ['id', 'academicBackground', 'academicVerificationStatus', 'summary']
           });
 
-          console.log(`👤 ${user.email} - Encontrados ${studentSkillRecords.length} registros de skills`);
+          if (studentCV) {
+            console.log(`� CV encontrado para estudiante ${user.email}`);
 
-          // Mapear niveles de proficiency a números
-          const levelMap = {
-            'beginner': 1,
-            'intermediate': 2,
-            'advanced': 3,
-            'expert': 4
-          };
+            // 🔥 OBTENER SKILLS DEL CV
+            if (studentCV.skills && studentCV.skills.length > 0) {
+              console.log(`🎯 Skills del CV encontradas: ${studentCV.skills.length}`);
 
-          studentSkillRecords.forEach(record => {
-            const skillName = record['skill.name'].toLowerCase().trim();
-            const proficiencyLevel = record.proficiencyLevel;
-            const numericLevel = levelMap[proficiencyLevel] || 1; // default a 1 si no está mapeado
-            
-            studentSkills[skillName] = numericLevel;
-            console.log(`   - ${skillName}: ${proficiencyLevel} (${numericLevel})`);
-          });
+              // Mapear niveles de proficiency a números
+              const levelMap = {
+                'bajo': 1,
+                'medio': 2,
+                'alto': 3
+              };
+
+              studentCV.skills.forEach(skill => {
+                const skillName = skill.name.toLowerCase().trim();
+                const proficiencyLevel = skill.cv_skills.proficiencyLevel;
+                const numericLevel = levelMap[proficiencyLevel] || 1; // default a 1 si no está mapeado
+
+                studentSkills[skillName] = numericLevel;
+                console.log(`   - ${skillName}: ${proficiencyLevel} (${numericLevel})`);
+              });
+            } else {
+              console.log(`⚠️ No se encontraron skills en el CV`);
+            }
+
+            // 🔥 OBTENER INFORMACIÓN ACADÉMICA DEL CV
+            if (studentCV.academicBackground) {
+              const academicBg = studentCV.academicBackground;
+              console.log(`📚 Academic Background encontrado:`, academicBg);
+
+              // Extraer profamilyId y scenterId del academicBackground
+              if (academicBg.profamily) {
+                studentProfamilyId = parseInt(academicBg.profamily);
+                console.log(`🎓 Profamily del estudiante extraído del CV: ${studentProfamilyId}`);
+              }
+
+              if (academicBg.scenter) {
+                studentScenterId = parseInt(academicBg.scenter);
+                console.log(`🏫 Scenter del estudiante extraído del CV: ${studentScenterId}`);
+              }
+
+              // Determinar estado de verificación académica
+              if (studentCV.academicVerificationStatus === 'verified') {
+                academicVerificationStatus = 'verified';
+                console.log(`✅ Estudiante academicamente verificado`);
+              } else {
+                academicVerificationStatus = 'unverified';
+                console.log(`❌ Estudiante no verificado academicamente`);
+              }
+            } else {
+              console.log(`⚠️ No se encontró academicBackground en el CV`);
+            }
+          } else {
+            console.log(`⚠️ No se encontró CV para el estudiante ${user.email}`);
+          }
         } catch (skillError) {
-          console.error(`❌ Error obteniendo skills para estudiante ${student.id}:`, skillError);
+          console.error(`❌ Error obteniendo skills/CV para estudiante ${student.id}:`, skillError);
           // Continuar sin skills si hay error
         }
 
         console.log(`👤 ${user.email} - skills procesados:`, studentSkills);
+        console.log(`👤 ${user.email} - profamilyId: ${studentProfamilyId}, scenterId: ${studentScenterId}, verification: ${academicVerificationStatus}`);
 
         // 🔥 CALCULAR AFINIDAD REAL
         const affinity = affinityCalculator.calculateAffinity(
           companySkillsObject,
           studentSkills,
           {
-            profamilyId: student.profamilyId,
-            offerProfamilyIds: offerId ? [offerInfo.profamilyId].filter(Boolean) : []
+            profamilyId: studentProfamilyId, // 🔥 USAR PROFAMILY DEL CV
+            offerProfamilyIds: offerId ? [offerInfo.profamilyId].filter(Boolean) : [],
+            academicVerificationStatus: academicVerificationStatus // 🔥 PASAR ESTADO DE VERIFICACIÓN
           }
         );
 
@@ -789,7 +839,7 @@ export const viewStudentCV = async (req, res) => {
         {
           model: Cv,
           as: 'cv',
-          attributes: ['id', 'academicBackground', 'summary'],
+          attributes: ['id', 'academicBackground', 'academicVerificationStatus', 'summary'],
           required: false,
           include: [
             {
@@ -869,7 +919,8 @@ export const viewStudentCV = async (req, res) => {
           name: profamilyInfo.name,
           description: profamilyInfo.description
         } : null,
-        status: academicBg.status || null
+        status: academicBg.status || null,
+        verificationStatus: student.cv.academicVerificationStatus || 'unverified'
       };
     } else {
       console.log(`⚠️ No se encontró academicBackground en el CV`);
@@ -913,7 +964,7 @@ export const viewStudentCV = async (req, res) => {
       },
       cv: {
         education: academicInfo ? 
-          `${academicInfo.profamily?.name || 'Carrera no especificada'} - ${academicInfo.scenter?.name || 'Centro no especificado'} (${academicInfo.status || 'Estado no especificado'})` :
+          `${academicInfo.profamily?.name || 'Carrera no especificada'} - ${academicInfo.scenter?.name || 'Centro no especificado'} (${academicInfo.status || 'Estado no especificado'}) [${academicInfo.verificationStatus}]` :
           'Información académica no disponible',
         skills: cvSkills.map(skill => `${skill.name} (${skill.proficiencyLevel})`),
         hasVehicle: student.car,
