@@ -45,6 +45,25 @@ Profamily.belongsToMany(Offer, {
     as: 'offers'
 });
 
+// Relaciones directas con OfferProfamily
+Offer.hasMany(OfferProfamily, {
+    foreignKey: 'offerId',
+    as: 'offerProfamilys'
+});
+OfferProfamily.belongsTo(Offer, {
+    foreignKey: 'offerId',
+    as: 'offer'
+});
+
+Profamily.hasMany(OfferProfamily, {
+    foreignKey: 'profamilyId',
+    as: 'offerProfamilys'
+});
+OfferProfamily.belongsTo(Profamily, {
+    foreignKey: 'profamilyId',
+    as: 'profamily'
+});
+
 // Relación muchos a muchos: Scenter-Profamily a través de ScenterProfamily
 Scenter.belongsToMany(Profamily, {
     through: ScenterProfamily,
