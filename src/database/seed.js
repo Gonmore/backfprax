@@ -12,8 +12,8 @@ import { StudentSkill } from "../models/studentSkill.js";
 import { OfferSkill } from "../models/offerSkill.js";
 import UserCompany from "../models/userCompany.js";
 import { UserScenter } from "../models/userScenter.js";
-import { AcademicVerification } from "../models/academicVerification.js";
-import logger from '../logs/logger.js';
+import { Cv } from "../models/cv.js";
+import { CvSkill } from '../models/cvSkill.js';
 
 async function seedDatabase() {
     try {
@@ -572,41 +572,133 @@ async function seedDatabase() {
         // Obtener todos los estudiantes existentes
         const allStudents = await Student.findAll();
 
-        // 9. Crear skills para estudiantes
-        logger.info('🎯 Asignando skills a estudiantes...');
-        await StudentSkill.bulkCreate([
+        // 8.5. Crear CVs para estudiantes
+        logger.info('📄 Creando CVs para estudiantes...');
+        const cvs = await Cv.bulkCreate([
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id,
+                summary: "Desarrollador web full-stack con experiencia en React, Node.js y PostgreSQL",
+                contactEmail: "juan.perez@test.com",
+                contactPhone: "600111111",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'IES001').id,
+                    profamily: allProfamilies.find(p => p.name === "Informática y Comunicaciones").id,
+                    status: "egresado"
+                },
+                academicVerificationStatus: "verified",
+                isComplete: true,
+                availability: "immediate"
+            },
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id,
+                summary: "Especialista en marketing digital con conocimientos en redes sociales y Google Ads",
+                contactEmail: "maria.gonzalez@test.com",
+                contactPhone: "600222222",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'CFP002').id,
+                    profamily: allProfamilies.find(p => p.name === "Comercio y Marketing").id,
+                    status: "egresado"
+                },
+                academicVerificationStatus: "verified",
+                isComplete: true,
+                availability: "1_month"
+            },
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id,
+                summary: "Estudiante de administración con conocimientos en contabilidad y gestión empresarial",
+                contactEmail: "carlos.ruiz@test.com",
+                contactPhone: "600333333",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'IES001').id,
+                    profamily: allProfamilies.find(p => p.name === "Administración y Gestión").id,
+                    status: "por_egresar"
+                },
+                academicVerificationStatus: "unverified",
+                isComplete: true,
+                availability: "3_months"
+            },
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id,
+                summary: "Auxiliar de enfermería con formación en primeros auxilios y cuidados básicos",
+                contactEmail: "ana.lopez@test.com",
+                contactPhone: "600444444",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'ISV003').id,
+                    profamily: allProfamilies.find(p => p.name === "Sanidad").id,
+                    status: "egresado"
+                },
+                academicVerificationStatus: "verified",
+                isComplete: true,
+                availability: "immediate"
+            },
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id,
+                summary: "Educador infantil con experiencia en pedagogía y animación sociocultural",
+                contactEmail: "david.martin@test.com",
+                contactPhone: "600555555",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'CFP002').id,
+                    profamily: allProfamilies.find(p => p.name === "Servicios Socioculturales y a la Comunidad").id,
+                    status: "por_egresar"
+                },
+                academicVerificationStatus: "unverified",
+                isComplete: true,
+                availability: "6_months"
+            },
+            {
+                studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id,
+                summary: "Diseñadora gráfica con experiencia en Photoshop, Illustrator y Figma",
+                contactEmail: "laura.sanchez@test.com",
+                contactPhone: "600666666",
+                academicBackground: {
+                    scenter: allScenters.find(s => s.code === 'ISV003').id,
+                    profamily: allProfamilies.find(p => p.name === "Informática y Comunicaciones").id,
+                    status: "por_egresar"
+                },
+                academicVerificationStatus: "unverified",
+                isComplete: true,
+                availability: "3_months"
+            }
+        ], { ignoreDuplicates: true });
+
+        // Obtener todos los CVs existentes
+        const allCvs = await Cv.findAll();
+
+        // 9. Crear skills para CVs de estudiantes
+        logger.info('🎯 Asignando skills a CVs de estudiantes...');
+        await CvSkill.bulkCreate([
             // Juan Pérez - Desarrollo Web
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "HTML/CSS").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "JavaScript").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "React").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "Node.js").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id, skillId: allSkills.find(s => s.name === "Express.js").id, proficiencyLevel: "intermediate" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "HTML/CSS").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "JavaScript").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "React").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Node.js").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'juan.perez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Express.js").id, proficiencyLevel: "medio" },
 
             // María González - Marketing Digital
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Google Ads").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Facebook Ads").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "SEO/SEM").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id, skillId: allSkills.find(s => s.name === "Social Media Marketing").id, proficiencyLevel: "intermediate" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Google Ads").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Facebook Ads").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "SEO/SEM").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'maria.gonzalez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Social Media Marketing").id, proficiencyLevel: "medio" },
 
             // Carlos Ruiz - Administración
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Gestión de Proyectos").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id, skillId: allSkills.find(s => s.name === "Recursos Humanos").id, proficiencyLevel: "intermediate" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Excel Avanzado").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Gestión de Proyectos").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'carlos.ruiz@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Recursos Humanos").id, proficiencyLevel: "medio" },
 
             // Ana López - Sanidad
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id, skillId: allSkills.find(s => s.name === "Auxiliar de Enfermería").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id, skillId: allSkills.find(s => s.name === "Primeros Auxilios").id, proficiencyLevel: "advanced" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Auxiliar de Enfermería").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'ana.lopez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Primeros Auxilios").id, proficiencyLevel: "alto" },
 
             // David Martín - Educación
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Educación Infantil").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Pedagogía").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id, skillId: allSkills.find(s => s.name === "Animación Sociocultural").id, proficiencyLevel: "intermediate" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Educación Infantil").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Pedagogía").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'david.martin@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Animación Sociocultural").id, proficiencyLevel: "medio" },
 
             // Laura Sánchez - Diseño
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Adobe Photoshop").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Adobe Illustrator").id, proficiencyLevel: "advanced" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "Figma").id, proficiencyLevel: "intermediate" },
-            { studentId: allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id, skillId: allSkills.find(s => s.name === "UI/UX Design").id, proficiencyLevel: "intermediate" }
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Adobe Photoshop").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Adobe Illustrator").id, proficiencyLevel: "alto" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "Figma").id, proficiencyLevel: "medio" },
+            { cvId: allCvs.find(cv => cv.studentId === allStudents.find(s => s.userId === allUsers.find(u => u.email === 'laura.sanchez@test.com').id).id).id, skillId: allSkills.find(s => s.name === "UI/UX Design").id, proficiencyLevel: "medio" }
         ], { ignoreDuplicates: true });
 
         // 10. Crear Tutores
@@ -896,6 +988,7 @@ async function seedDatabase() {
         - ${allCompanies.length} empresas
         - ${allUsers.length} usuarios (${allUsers.filter(u => u.role === 'student').length} estudiantes, ${allUsers.filter(u => u.role === 'company').length} empresas, ${allUsers.filter(u => u.role === 'scenter').length} centros, ${allUsers.filter(u => u.role === 'tutor').length} tutores, ${allUsers.filter(u => u.role === 'admin').length} admin)
         - ${allStudents.length} perfiles de estudiantes
+        - ${allCvs.length} CVs de estudiantes
         - ${allTutors.length} tutores
         - ${allOffers.length} ofertas de prácticas
         - ${allOffers.length * 2} relaciones skill-oferta (aprox)
@@ -910,6 +1003,7 @@ async function seedDatabase() {
                 companies: allCompanies.length,
                 users: allUsers.length,
                 students: allStudents.length,
+                cvs: allCvs.length,
                 tutors: allTutors.length,
                 offers: allOffers.length,
                 academicVerifications: 3 // estudiantes verificados

@@ -23,7 +23,8 @@ async function runSeed() {
         console.log(`   🏢 Empresas: ${result.data.companies}`);
         console.log(`   👥 Usuarios totales: ${result.data.users}`);
         console.log(`   🎓 Perfiles estudiantes: ${result.data.students}`);
-        console.log(`   👨‍🏫 Tutores: ${result.data.tutors}`);
+        console.log(`   � CVs de estudiantes: ${result.data.cvs}`);
+        console.log(`   �👨‍🏫 Tutores: ${result.data.tutors}`);
         console.log(`   💼 Ofertas: ${result.data.offers}`);
         console.log(`   📜 Verificaciones académicas: ${result.data.academicVerifications || 0}`);
 
