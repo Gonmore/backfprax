@@ -265,8 +265,8 @@ export const searchIntelligentStudents = async (req, res) => {
           },
           {
             model: Profamily,
-            as: 'profamily',
-            attributes: ['id', 'name']
+            as: 'profamilys', // ✅ Corregido: usar plural como en la definición de relación
+            through: { attributes: [] }
           }]
         });
         console.log('🔍 Resultado de búsqueda de oferta:', offer ? 'ENCONTRADA' : 'NO ENCONTRADA');
@@ -292,7 +292,7 @@ export const searchIntelligentStudents = async (req, res) => {
           id: offer.id,
           name: offer.name,
           skills: Object.keys(companySkillsObject),
-          profamilyId: offer.profamily ? offer.profamily.id : null
+          profamilyId: offer.profamilys ? offer.profamilys[0]?.id : null // ✅ Corregido: usar plural
         };
       } catch (offerError) {
         console.error('❌ ERROR BUSCANDO OFERTA:', offerError);
@@ -573,18 +573,16 @@ export const searchIntelligentStudents = async (req, res) => {
         console.log(`👤 ${user.email} - skills procesados:`, studentSkills);
         console.log(`👤 ${user.email} - profamilyId: ${studentProfamilyId}, scenterId: ${studentScenterId}, verification: ${academicVerificationStatus}`);
 
-        // 🔥 CALCULAR AFINIDAD REAL
-        const affinity = affinityCalculator.calculateAffinity(
-          companySkillsObject,
-          studentSkills,
-          {
-            profamilyId: studentProfamilyId, // 🔥 USAR PROFAMILY DEL CV
-            offerProfamilyIds: offerId ? [offerInfo.profamilyId].filter(Boolean) : [],
-            academicVerificationStatus: academicVerificationStatus // 🔥 PASAR ESTADO DE VERIFICACIÓN
-          }
-        );
-
-        console.log(`🎯 Afinidad calculada ${user.email}: ${affinity.level} (score: ${affinity.score}, matches: ${affinity.matches}, coverage: ${affinity.coverage}%)`);
+                // 🔥 CALCULAR AFINIDAD REAL
+                const affinity = affinityCalculator.calculateAffinity(
+                  companySkillsObject,
+                  studentSkills,
+                  {
+                    profamilyId: studentProfamilyId, // 🔥 USAR PROFAMILY DEL CV
+                    offerProfamilyIds: offerId ? offer.profamilys.map(p => p.id) : [], // ✅ Corregido: usar plural
+                    academicVerificationStatus: academicVerificationStatus // 🔥 PASAR ESTADO DE VERIFICACIÓN
+                  }
+                );        console.log(`🎯 Afinidad calculada ${user.email}: ${affinity.level} (score: ${affinity.score}, matches: ${affinity.matches}, coverage: ${affinity.coverage}%)`);
 
         studentsWithAffinity.push({
           ...student,
