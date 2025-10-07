@@ -338,11 +338,11 @@
     
     const baseInfo = `Coincide con ${coverageText} las habilidades buscadas`;
     
-    // 🔥 INFORMACIÓN DE VERIFICACIÓN ACADÉMICA
+    // 🔥 INFORMACIÓN DE VERIFICACIÓN ACADÉMICA (con colores HTML)
     const verificationInfo = factors.profamilyAffinity?.level === 'exact_verified' 
-      ? " ✓ Información académica verificada por centro de estudios."
+      ? " <span style='color: #16a34a; font-weight: 600;'>✓ Información académica verificada por centro de estudios.</span>"
       : factors.profamilyAffinity?.level === 'exact_unverified'
-      ? " ⚠ Información académica pendiente de verificación."
+      ? " <span style='color: #ca8a04; font-weight: 600;'>⚠ Información académica pendiente de verificación.</span>"
       : "";
 
     const explanations = {

@@ -415,11 +415,12 @@ async function getOffersByProfamily(req, res) {
             include: [
                 {
                     model: Profamily,
-                    attributes: ['id', 'name', 'description']
+                    as: 'profamilys',
+                    attributes: ['id', 'name', 'description'],
+                    through: { attributes: [] }
                 },
                 {
                     model: Company,
-                    through: { attributes: [] },
                     attributes: ['id', 'name', 'city', 'sector']
                 }
             ]
@@ -1125,6 +1126,7 @@ async function getOffersWithAptitude(req, res) {
                     profamilyId: offer.profamilyId,
                     company: offer.company,
                     profamily: offer.profamilys && offer.profamilys.length > 0 ? offer.profamilys[0] : null,
+                    profamilys: offer.profamilys, // 🔥 AGREGAR TODAS LAS PROFAMILYS
                     skills: offer.skills.map(skill => ({
                         id: skill.id,
                         name: skill.name,
