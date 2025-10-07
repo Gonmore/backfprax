@@ -221,6 +221,7 @@ export const getCandidates = async (req, res) => {
 
 export const searchIntelligentStudents = async (req, res) => {
   console.log('🚀 ===== FUNCIÓN searchIntelligentStudents EJECUTÁNDOSE =====');
+  console.error('🚨🚨🚨 DEBUG BACKEND: searchIntelligentStudents called at', new Date().toISOString());
   try {
     console.log('🔍 ===== INICIANDO BÚSQUEDA INTELIGENTE =====');
     const { userId } = req.user;
@@ -239,6 +240,9 @@ export const searchIntelligentStudents = async (req, res) => {
     console.log('   - filters.profamilyId:', filters.profamilyId);
     console.log('   - filters.profamilyId tipo:', typeof filters.profamilyId);
     console.log('   - filters.profamilyId valor parseado:', filters.profamilyId ? parseInt(filters.profamilyId) : 'NO EXISTE');
+
+    console.error('🚨🚨🚨 DEBUG BACKEND: Filters received:', JSON.stringify(filters));
+    console.error('🚨🚨🚨 DEBUG BACKEND: Skills received:', JSON.stringify(skills));
 
     // 🔥 MANEJAR AMBOS CASOS: offerId O skills
     if (!offerId && (!skills || skills.length === 0)) {
@@ -404,6 +408,8 @@ export const searchIntelligentStudents = async (req, res) => {
     if (filters.car !== undefined) whereClause.car = filters.car;
 
     console.log('🔍 Filtros aplicados:', whereClause);
+    console.error('🚨🚨🚨 DEBUG BACKEND: Where clause:', JSON.stringify(whereClause));
+    console.error('🚨🚨🚨 DEBUG BACKEND: Applied student IDs:', appliedStudentIds);
 
     // Obtener estudiantes
     console.log('🔍 Buscando estudiantes candidatos...');
@@ -646,6 +652,15 @@ export const searchIntelligentStudents = async (req, res) => {
     });
 
     console.log(`✅ Candidatos con afinidad: ${studentsWithAffinity.length}`);
+    console.error('🚨🚨🚨 DEBUG BACKEND: Returning students with affinity:', studentsWithAffinity.length);
+    console.error('🚨🚨🚨 DEBUG BACKEND: Search criteria:', JSON.stringify({
+      offerId: offerId || null,
+      skills: skills || Object.keys(companySkillsObject),
+      filters,
+      totalFound: studentsWithAffinity.length,
+      excludedCandidates: appliedStudentIds.length,
+      searchType: offerId ? 'for_specific_offer' : 'general_search'
+    }));
     
     res.json({
       students: studentsWithAffinity,
